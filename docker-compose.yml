@@ -3,7 +3,7 @@ services:
     container_name: meetup_link_proxy
     build:
       context: .
-      dockerfile: .docker/nginx/Dockerfile
+      dockerfile: ./docker/nginx/Dockerfile
     ports:
       - 8000:80
     volumes:
@@ -13,13 +13,13 @@ services:
     container_name: meetup_link_app
     build:
       context: .
-      dockerfile: ./docker/app/Dockerfile
+      dockerfile: ./docker/php/Dockerfile
     volumes:
         - ./docker/php/php.ini:/usr/local/etc/php/php.ini
         - ./backend:/var/www/html
     ports:
       - 9000:80
-    depends_on: 
+    depends_on:
       - db # db起動後にappを起動する
   db:
     container_name: meetup_link_db
@@ -40,4 +40,18 @@ services:
     image: adminer:latest
     ports:
       - 10000:8080
-    
+  frontend:
+    container_name: meetup_link_front
+    build:
+      context: .
+      dockerfile: ./docker/nextjs/Dockerfile
+    volumes:
+      - ./frontend/app:./app
+      - ./frontend/package.json:./app/package.json
+      - ./frontend/package-lock.json:./app/package-lock.json
+    ports:
+    - 3000:3000
+    depends_on:
+      - app
+volumes:
+  db_meetup_volume:
