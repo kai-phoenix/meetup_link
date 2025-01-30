@@ -45,10 +45,10 @@ services:
     build:
       context: .
       dockerfile: ./docker/nextjs/Dockerfile
-    volumes:
-      - ./frontend/app:./app
-      - ./frontend/package.json:./app/package.json
-      - ./frontend/package-lock.json:./app/package-lock.json
+    # volumes:
+    #   - ./frontend/app:/app
+    #   - ./frontend/package.json:./app/package.json
+    #   - ./frontend/package-lock.json:./app/package-lock.json
     ports:
     - 3000:3000
     depends_on:
