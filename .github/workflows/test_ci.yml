@@ -32,8 +32,13 @@ jobs:
         php-version: "8.3"
     - name: Install_Composer_Dependencies
       run: |
-        cd ./backend
+        cd backend
         composer install --no-scripts
+    - name: Copy env & Generate Key
+      run: |
+        cd backend
+        cp .env.example .env
+        php artisan key:generate
     - name: Run_Laravel_Test
       run: |
         cd ./backend
