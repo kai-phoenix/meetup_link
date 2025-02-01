@@ -8,6 +8,10 @@ composer create-project laravel/laravel backend --prefer-dist
 
 ## フロントエンド
 
+typescriptでtestを行えるようにするためにnextjsディレクトリへ移動し以下コマンドでJestをインストールする
+npm install --save-dev jest @types/jest ts-jest
+npm install --save-dev ts-node
+
 ## Docker構築
 
 キャッシュなしでのビルド
