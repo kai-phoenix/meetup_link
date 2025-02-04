@@ -42,14 +42,15 @@ class AuthController extends Controller
         if(!Auth::attempt($validated_credentials)) {
             return response()->json(["message"=>"Invalid credentials"]);
         }
-        // ログインできているとユーザー情報を取得
+        // ログインできているとユーザー情報を取得(phpintelliphenseがエラーを吐くため、下で$userが定義したUserモデルであることを宣言)
+         /** @var \App\Models\MyUserModel $user **/
         $user=Auth::user();
-
         // トークン発行
-        $user_token=$user->createToken('access_token')->plainTextToken;
+        // $user_token=$request->user()->createToken('access_token')->plainTextToken;
+        $token = $user->createToken('access_token')->plainTextToken;
         return response()->json([
             'user'=>$user,
-            'token'=>$user_token,
+            'token'=>$token,
         ],200);
     }
     // ログアウト処理
