@@ -33,6 +33,19 @@ npm install --save-dev ts-node
 キャッシュなしでのビルド
 docker-compose build --no-cache
 
+## DB
+
+User検証用に以下のUser情報をコンテナ接続後に作成
+(・・・はテーブル設定に沿う値)
+docker compose exec app php artisan tinker
+use App\Models\User;
+User::create([
+'name' => '・・・',
+'email' => '・・・',
+'password' => bcrypt('・・・')
+]);
+ログイン可能であることを確認
+
 ## API設計
 
 下記記事を参考にした
