@@ -10,7 +10,7 @@ export function LogoutButton() {
                 method:'POST',
                 headers: {
                     'Accept':'application/json',
-                    'Authorization':`Bearer${token}`
+                    'Authorization':`Bearer ${token}`
                 }
             })
         }
