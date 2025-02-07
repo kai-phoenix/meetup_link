@@ -17,10 +17,14 @@ composer require laravel/sanctum
 フロント側からバックエンド側へ通信を許可するファイルCors.phpがデフォルトでLaravel11に作成されてないので./backendにて以下コマンドでcors.phpをconfig/cors.phpへ作成
 php artisan config:publish cors
 cors.php内のallowed_originsプロパティにlocalhost:3000を入力する
-'allowed_origins' => ['http:localhost:3000'],
+'allowed_origins' => ['http://localhost:3000'],
 
 次に認証用のAuthControllerを以下のコマンドで作成
-php artisan make:AuthController
+php artisan make:controller AuthController
+
+ログアウト機能が実装できたので保護ページ用のControllerを作成
+docker compose exec app php artisan make:controller PostController --resource
+docker compose exec app php artisan make:controller ProfileController --resource
 
 ## フロントエンド
 
