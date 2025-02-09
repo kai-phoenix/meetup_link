@@ -45,18 +45,18 @@ export default function LoginPage() {
         }
     }
     return (
-        <div style={{margin:'20px'}}>
-            <h1>ログイン</h1>
-            <form onSubmit={handleSubmit}>
-                <div style={{marginBottom:'10px'}}>
+        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+            <h1 className="my-5 text-2xl font-bold">ログインフォーム</h1>
+            <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-black">
+                <div className='mb-2.5 w-11/12 flex justify-between flex-rap mx-auto'>
                     <label htmlFor="email">Email:</label>
-                    <input id="email" type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}/>
+                    <input id="email" type="email" name="email" value={email} onChange={e => setEmail(e.target.value)} className='border border-black w-9/12'/>
                 </div>
-                <div style={{marginBottom:'10px'}}>
+                <div className='mb-2.5 w-11/12 flex justify-between flex-rap mx-auto'>
                     <label htmlFor="password">Password:</label>
-                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} className='border border-black w-9/12'/>
                 </div>
-                <button type="submit">
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl text-sm w-4/12 mx-auto">
                     ログイン
                 </button>
             </form>

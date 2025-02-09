@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav style={{padding:10,background:'#eee'}}>
+        <nav className="flex justify-end bg-gray-200 p-4">
           <LogoutButton/>
         </nav>
         {children}
