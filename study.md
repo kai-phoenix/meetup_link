@@ -31,6 +31,9 @@ docker compose exec app php artisan make:controller ProfileController --resource
 typescriptでtestを行えるようにするためにnextjsディレクトリへ移動し以下コマンドでJestをインストールする
 npm install --save-dev jest @types/jest ts-jest
 npm install --save-dev ts-node
+reactテストをするため、以下コマンドでjestライブラリ(react,jset-dom)をインストール
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm i -D jest-environment-jsdom
 
 ## Docker構築
 
