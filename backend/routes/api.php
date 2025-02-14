@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,8 +12,8 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 // Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::middleware(('auth:sanctum'))->group(function(){
-    // 投稿表示
-    Route::get('/posts',[PostController::class,'index']);
+    // 投稿イベント表示
+    Route::get('/posts',[EventController::class,'index']);
     // プロフィール表示
     Route::get('/profile',[ProfileController::class,'show']);
     // ログアウト
