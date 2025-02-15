@@ -62,6 +62,10 @@ User::create([
 'password' => bcrypt('・・・')
 ]);
 ログイン可能であることを確認
+Event,Category,Reservationモデルを作成し、マイグレーションも作成
+php artisan make:model Event --migration
+php artisan make:model Category --migration
+php artisan make:model Reservation --migration
 
 ## API設計
 
