@@ -12,8 +12,14 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 // Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::middleware(('auth:sanctum'))->group(function(){
-    // 投稿イベント表示
-    Route::get('/posts',[EventController::class,'index']);
+    // イベント表示
+    Route::get('/events',[EventController::class,'index']);
+    // イベント詳細表示
+    Route::get('/events/{id}',[EventController::class,'show']);
+    // イベント予約
+    Route::post('/events/{id}/reserve',[EventController::class,'reserve']);
+    // イベントキャンセル
+    Route::delete('/events/{id}/reserve',[EventController::class,'cancel']);
     // プロフィール表示
     Route::get('/profile',[ProfileController::class,'show']);
     // ログアウト

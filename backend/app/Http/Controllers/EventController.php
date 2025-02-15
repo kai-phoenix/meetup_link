@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Event;
+use App\Models\Reservation;
 
 class EventController extends Controller
 {
@@ -11,7 +13,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        // $event=Event::create();
+        return response();
     }
 
     /**
@@ -57,7 +60,7 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function cancel(string $id)
     {
         //
     }
