@@ -40,6 +40,16 @@ npm i -D jest-environment-jsdom
 キャッシュなしでのビルド
 docker-compose build --no-cache
 
+本番用と分けたい場合、開発用のdocker-compose.dev.ymlを作成し
+以下コマンドで開発用のdockerを起動
+(本アプリではnextjsのホットリロード機能を使いたいため分割した
+docker/nextjs/Dockerfile.devに開発用設定を追加した。)
+
+docker compose -f docker-compose.dev.yml up -d
+(docker compose -f docker-compose.dev.yml up -d --build)
+接続切るときは以下
+docker compose -f docker-compose.dev.yml down
+
 ## DB
 
 User検証用に以下のUser情報をコンテナ接続後に作成
