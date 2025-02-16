@@ -1,6 +1,6 @@
 'use client'
 import {useState} from 'react'
-// import {useRouter} from 'next/navigation'
+import {useRouter} from 'next/navigation'
 
 export default function LoginPage() {
     // フォームの入力を管理するReactのStateを定義
@@ -8,7 +8,7 @@ export default function LoginPage() {
     const[password,setPassword] = useState('')
 
     // 画面遷移や再描画に使用する
-    // const router = useRouter()
+    const router = useRouter()
 
     // フォーム送信時の処理
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
@@ -34,11 +34,17 @@ export default function LoginPage() {
             }
             // 成功ならトークンやユーザー情報を受け取る
             const data = await res.json()
+            console.log(data)
+            // ログイン失敗時の処理
+            if(data.message === "Invalid credentials"){
+                alert('メールアドレスかパスワードが間違っております。') 
+                return
+            }
             alert('ログイン成功:'+data.user?.email)
             // トークンをローカルストレージへ保存
             localStorage.setItem('token',data.token)
             // 次ページへ遷移
-            // router.push('/posts')
+            router.push('/events')
         }
         catch(error){
             alert('エラー発生'+error)
