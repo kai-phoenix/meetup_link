@@ -1,0 +1,65 @@
+services:
+  proxy:
+    container_name: meetup_link_proxy
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./backend:/var/www/html
+    # app起動後にnginxを起動する
+    depends_on:
+      - app
+  app:
+    container_name: meetup_link_app
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+        - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+        - ./backend:/var/www/html
+    # php-fpmのポートをnginxのdefault.confに合わせる
+    expose:
+      - "9000"
+    # db起動後にappを起動する
+    depends_on:
+      - db
+  db:
+    container_name: meetup_link_db
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    volumes:
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - db_meetup_volume:/var/lib/mysql
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  adminer:
+    container_name: meetup_link_adminer
+    image: adminer:latest
+    ports:
+      - 10000:8080
+  frontend-dev:
+    container_name: meetup_link_front
+    build:
+      context: .
+      dockerfile: ./docker/nextjs/Dockerfile.dev
+    ports:
+    - 3000:3000
+    volumes:
+      - ./frontend:/app
+    environment:
+    - NODE_ENV=development
+    - WATCHPACK_POLLING=true
+    command: npm run dev
+    depends_on:
+      - app
+volumes:
+  db_meetup_volume:
