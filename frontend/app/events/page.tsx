@@ -22,19 +22,18 @@ export default function EventPage() {
             }
         })
         .then(res => {
+            console.log(res)
             if(!res.ok) {
-                router.push('/login')
+                //router.push('/login')
                 return null
             }
             return res.json()
         })
         .then(data => {
+            console.log(data)
             if(data?.event){
-                setEvent(data.event)   
+                setEvent(data.event)
             }
-        })
-        .catch(()=> {
-            router.push('/login')
         })
     },[router])
     if(!event) {
@@ -45,8 +44,8 @@ export default function EventPage() {
             <h1>イベント一覧</h1>
             <ul>
                 {event.map((event: Event) => (
-                    <a href = {`/events/${event.id}`}>
-                        <li key={event.id}>
+                    <a href = {`/events/${event.id}`} key={event.id}>
+                        <li>
                             <p>{event.id}</p>
                             <p>{event.event_date}</p>
                             <p>{event.capacity}</p>
