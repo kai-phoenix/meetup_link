@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/';
 import LoginPage from '../page';
 
 // useRouterをモック化
-jest.mock('next/router',() => ({
+jest.mock('next/navigation',() => ({
     useRouter:() => ( {
         push:jest.fn(),
     })
