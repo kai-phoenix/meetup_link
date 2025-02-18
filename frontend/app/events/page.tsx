@@ -49,6 +49,7 @@ export default function EventPage() {
                             <p>{event.id}</p>
                             <p>{event.event_date}</p>
                             <p>{event.capacity}</p>
+                            <p>{event.money}</p>
                             <p>{event.description}</p>
                             <p>{event.status}</p>
                         </li>
