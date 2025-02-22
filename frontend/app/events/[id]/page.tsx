@@ -1,11 +1,12 @@
 'use client'
 import { useState,useEffect} from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter,useParams} from 'next/navigation'
 import { Event } from '@/types/event'
 
 export default function EventPage() {
-    const [event, setEvent] = useState<Event[]|null>(null)
+    const [event, setEvent] = useState<Event|null>(null)
     const router = useRouter()
+    const params = useParams()
 
     useEffect(()=>{
         const token = localStorage.getItem('token')
@@ -15,7 +16,7 @@ export default function EventPage() {
             return
         }
         // Bearerトークンを付与し、イベント一覧を取得
-        fetch('http://localhost:8000/api/events',{
+        fetch(`http://localhost:8000/api/events/${params.id}`,{
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -43,18 +44,14 @@ export default function EventPage() {
         <div>
             <h1>イベント一覧</h1>
             <ul>
-                {event.map((event: Event) => (
-                    <a href = {`/events/${event.id}`} key={event.id}>
-                        <li>
-                            <p>{event.id}</p>
-                            <p>{event.event_date}</p>
-                            <p>{event.capacity}</p>
-                            <p>{event.money}</p>
-                            <p>{event.description}</p>
-                            <p>{event.status}</p>
-                        </li>
-                    </a>
-                ))}
+                <li>
+                    <p>{event.id}</p>
+                    <p>{event.event_date}</p>
+                    <p>{event.capacity}</p>
+                    <p>{event.money}</p>
+                    <p>{event.description}</p>
+                    <p>{event.status}</p>
+                </li>
             </ul>
         </div>
     )
