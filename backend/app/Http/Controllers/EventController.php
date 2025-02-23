@@ -56,7 +56,18 @@ class EventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $event=Event::findOrFail($id);
+        // バリデーション
+        $validated = $request -> validate([
+            'event_date' => 'required|date',
+            'capacity' => 'required|integer',
+            'money' => 'required|integer',
+            'description' => 'required|string',
+            'status' => 'required|integer',
+        ]);
+        // 更新
+        $event->update($validated);
+        return response() -> json(['event'=>$event],200);
     }
 
     /**

@@ -2,6 +2,8 @@
 import { useState,useEffect} from 'react'
 import { useRouter } from 'next/navigation'
 import { Event } from '@/types/event'
+import { EditButton } from '../components/EditButton'
+import { RemoveButton } from '../components/RemoveButton'
 
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
@@ -44,7 +46,7 @@ export default function EventPage() {
             <h1>イベント一覧</h1>
             <ul>
                 {event.map((event: Event) => (
-                    <a href = {`/events/${event.id}`} key={event.id}>
+                    <a href = {`/events/${event.id}/edit`} key={event.id}>
                         <li>
                             <p>{event.id}</p>
                             <p>{event.event_date}</p>
@@ -53,6 +55,8 @@ export default function EventPage() {
                             <p>{event.description}</p>
                             <p>{event.status}</p>
                         </li>
+                        <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
+                        <RemoveButton removePath = {`/events/${event.id}/cancel`}/>
                     </a>
                 ))}
             </ul>
