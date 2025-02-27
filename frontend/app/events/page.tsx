@@ -56,7 +56,7 @@ export default function EventPage() {
                             <p>{event.status}</p>
                         </li>
                         <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
-                        <RemoveButton removePath = {`/events/${event.id}/cancel`}/>
+                        <RemoveButton removePath = {`/events/${event.id}/cancel`} name="削除"/>
                     </a>
                 ))}
             </ul>
