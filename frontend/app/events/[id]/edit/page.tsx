@@ -3,6 +3,7 @@ import { useState,useEffect} from 'react'
 import { useRouter,useParams} from 'next/navigation'
 import { Event } from '@/types/event'
 import { UpdateButton } from '@/app/components/UpdateButton'
+import { ReturnButton } from '@/app/components/ReturnButton'
 
 export default function EditEventPage() {
     const [event, setEvent] = useState<Event|null>(null)
@@ -50,7 +51,7 @@ export default function EditEventPage() {
             }
         })
     },[router,params.id])
-    
+
     const handleUpdate = async(e:React.FormEvent) => {
         e.preventDefault()
         const token = localStorage.getItem('token')
@@ -111,7 +112,8 @@ export default function EditEventPage() {
                     <input type='text' value={status} onChange={e=>setStatus(e.target.value)}/>
                 </div>
                 <UpdateButton name="更新"/>
-                <button type="button" onClick={() => router.back()}>戻る</button>
+                {/* <button type="button" onClick={() => router.back()}>戻る</button> */}
+                <ReturnButton name="戻る"/>
             </form>
         </div>
     )
