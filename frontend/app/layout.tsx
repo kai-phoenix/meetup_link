@@ -26,12 +26,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
-        <nav className="flex justify-end bg-gray-200 p-4">
-          <LogoutButton/>
-        </nav>
-        {children}
+        <header>
+          <nav className="flex justify-end bg-cyan-200 p-4">
+            <LogoutButton/>
+          </nav>
+        </header>
+        <main>
+          {children}
+        </main>
+        <footer>
+        </footer>
       </body>
     </html>
   );

@@ -24,7 +24,6 @@ export default function EventPage() {
             }
         })
         .then(res => {
-            console.log(res)
             if(!res.ok) {
                 router.push('/login')
                 return null
@@ -42,7 +41,7 @@ export default function EventPage() {
         return <div>ロード中・・・</div>
     }
     return (
-        <div>
+        <div className='bg-gray-100'>
             <h1>イベント一覧</h1>
             <ul>
                 {event.map((event: Event) => (
