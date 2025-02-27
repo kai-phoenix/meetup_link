@@ -72,3 +72,7 @@ php artisan make:model Reservation --migration
 下記記事を参考にした
 
 https://zenn.dev/arsaga/articles/4a72774b1c93d2
+
+## デザイン
+下記URLの実装例から拡張して作成
+https://ui8.net/royalz-store/products/ella-mobile-wallet-app-ui-kit?rel=timer
