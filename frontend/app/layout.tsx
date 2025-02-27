@@ -33,7 +33,7 @@ export default function RootLayout({
             <LogoutButton/>
           </nav>
         </header>
-        <main>
+        <main className="w-10/12 max-w-screen-lg ml-16 mr-auto my-4">
           {children}
         </main>
         <footer>
