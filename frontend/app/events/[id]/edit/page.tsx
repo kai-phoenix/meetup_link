@@ -112,9 +112,8 @@ export default function EditEventPage() {
                     <input type='text' value={status} onChange={e=>setStatus(e.target.value)}/>
                 </div>
                 <UpdateButton name="更新"/>
-                {/* <button type="button" onClick={() => router.back()}>戻る</button> */}
-                <ReturnButton name="戻る"/>
             </form>
+            <ReturnButton name="戻る"/>
         </div>
     )
 }

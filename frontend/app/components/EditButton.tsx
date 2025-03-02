@@ -8,6 +8,6 @@ export function EditButton({editPath,name}: Readonly<{ editPath:string,name:stri
         router.push(editPath)
     }
     return (
-        <button onClick={handleEditClick} className="py-1 px-2.5 bg-lime-500 rounded-2xl text-white font-black text-sm">{name}</button>
+        <button onClick={handleEditClick} className="py-1 px-2.5 bg-lime-500 hover:bg-gray-700 rounded-2xl text-white font-black text-sm mx-1">{name}</button>
     )
 }

@@ -41,24 +41,26 @@ export default function EventPage() {
         return <div>ロード中・・・</div>
     }
     return (
-        <div className='bg-gray-100'>
-            <h1>イベント一覧</h1>
+        <div className=''>
+            <h1 className='text-2xl py-4'>イベント一覧</h1>
             <ul>
                 {event.map((event: Event) => (
-                    <a href = {`/events/${event.id}/edit`} key={event.id}>
-                        <li>
-                            <p>{event.id}</p>
-                            <p>{event.event_date}</p>
-                            <p>{event.capacity}</p>
-                            <p>{event.money}</p>
-                            <p>{event.description}</p>
-                            <p>{event.status}</p>
-                        </li>
-                        <div>
+                    <div key={event.id} className='flex align-center border-2 border-cyan-200 w-7/12 mb-8 p-4 min-w-max shadow-md shadow-cyan-500'>
+                        <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
+                            <li className='min-w-72 text-xl'>
+                                <p>{event.id}</p>
+                                <p>{event.capacity}</p>
+                                <p>{event.money}</p>
+                                <p>{event.description}</p>
+                                <p>{event.event_date}</p>
+                                <p>{event.status}</p>
+                            </li>
+                        </a>
+                        <div className='my-auto'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
                             <RemoveButton removePath = {`/events/${event.id}/cancel`} name="削除"/>
                         </div>
-                    </a>
+                    </div>
                 ))}
             </ul>
         </div>

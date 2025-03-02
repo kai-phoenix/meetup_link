@@ -8,6 +8,6 @@ export function RemoveButton({removePath,name}: Readonly<{ removePath:string,nam
         router.push(removePath)
     }
     return (
-        <button onClick = {handleRemoveClick} className="py-1 px-2.5 bg-red-500 rounded-2xl text-white font-black text-sm">{name}</button>
+        <button onClick = {handleRemoveClick} className="py-1 px-2.5 bg-red-500 hover:bg-gray-700 rounded-2xl text-white font-black text-sm mx-1">{name}</button>
     )
 }

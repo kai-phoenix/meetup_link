@@ -28,8 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
-        <header>
-          <nav className="flex justify-end bg-cyan-200 p-4">
+        <header className="flex bg-cyan-400 justify-between align-middle min-w-max">
+          <p className="text-2xl font-bold my-auto ml-16 text-white">Meetup_link</p>
+          <nav className="justify-end p-4">
             <LogoutButton/>
           </nav>
         </header>
