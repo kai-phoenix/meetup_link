@@ -17,6 +17,9 @@ return new class () extends Migration {
             $table->integer("quantity");
             $table->tinyInteger("status");
             $table->timestamps();
+            // リレーション
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 

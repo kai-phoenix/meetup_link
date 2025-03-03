@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Event } from '@/types/event'
 import { EditButton } from '../components/EditButton'
 import { RemoveButton } from '../components/RemoveButton'
+import { ReservationButton } from '../components/ReservationButton'
 
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
@@ -55,6 +56,7 @@ export default function EventPage() {
                                 <p>{event.event_date}</p>
                                 <p>{event.status}</p>
                             </li>
+                            <ReservationButton eventId={event.id}></ReservationButton>
                         </a>
                         <div className='my-auto'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>

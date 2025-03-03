@@ -40,7 +40,7 @@ class EventController extends Controller
     public function show(string $id)
     {
         $event=Event::findOrFail($id);
-        return(response()->json(['event'=>$event]));
+        return response()->json(['event'=>$event]);
     }
 
     /**
@@ -69,12 +69,50 @@ class EventController extends Controller
         $event->update($validated);
         return response() -> json(['event'=>$event],200);
     }
+    public function reserve(Request $request,string $id)
+    {
+        // イベント、ユーザー情報取得
+        $event=Event::findOrFail($id);
+        $user=$request->user();
 
+        //定員チェック
+        $currentCount=0;
+        $reservations=Reservation::where('event_id',$event->id);
+        foreach($reservations as $reservation)
+        {
+            $currentCount+=$reservation->quantity;
+        }
+        if($currentCount>$event->capacity)
+        {
+            return response()->json([
+                "message"=>"上限人数を超えたため新規予約は失敗しました。"
+            ],400);
+        }
+        // 予約レコードを作成
+        $new_reservation = new Reservation();
+        $new_reservation->user_id=$user->id;
+        $new_reservation->event_id=$event->id;
+        $new_reservation->party=$request->input('party');
+
+        return response()->json([
+            "message"=>"新規予約できました！",
+            "reservation"=>$new_reservation,
+        ],201);
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function cancel(string $id)
+    public function cancel(Request $request,string $id)
     {
-        //
+        //キャンセル対象イベント
+        $event=Event::findOrFail($id);
+        $user=$request->user();
+
+        $reservation=Reservation::where('user_id',$user->id)->where('event_id',$event->id);
+        // イベント削除
+        $reservation->delete();
+        return response()->json([
+            "message"=>"予約を取り消しました。"
+        ],200);
     }
 }
