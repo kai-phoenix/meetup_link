@@ -56,8 +56,8 @@ export default function EventPage() {
                                 <p>{event.event_date}</p>
                                 <p>{event.status}</p>
                             </li>
-                            <ReservationButton eventId={event.id}></ReservationButton>
                         </a>
+                        <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
                         <div className='my-auto'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
                             <RemoveButton removePath = {`/events/${event.id}/cancel`} name="削除"/>
