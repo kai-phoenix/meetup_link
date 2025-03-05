@@ -7,6 +7,6 @@ export function ReservationButton({reservationPath}:Readonly<{reservationPath:st
         router.push(reservationPath)
     }
     return (
-        <button onClick={handleReserve} className="bg-blue-500 text-white hover:bg-gray-700 rounded rounded-2xl text-white font-black text-sm py-1 px-2.5">予約</button>
+        <button onClick={handleReserve} className="bg-blue-500 text-white hover:bg-gray-700 rounded rounded-2xl text-white font-black text-sm py-1 px-2.5 w-12">予約</button>
     )
 }

@@ -17,7 +17,7 @@ export default function ReserveEventPage() {
             router.push('/login')
             return
         }
-        fetch(`http://localhost:8000/api/events/${params.id}`,{
+        fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
             headers: {
                 'Accept':'application/json',
                 'Authorization': `Bearer ${token}`

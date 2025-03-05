@@ -47,17 +47,19 @@ export default function EventPage() {
             <ul>
                 {event.map((event: Event) => (
                     <div key={event.id} className='flex align-center border-2 border-cyan-200 w-7/12 mb-8 p-4 min-w-max shadow-md shadow-cyan-500'>
-                        <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
-                            <li className='min-w-72 text-xl'>
-                                <p>{event.id}</p>
-                                <p>{event.capacity}</p>
-                                <p>{event.money}</p>
-                                <p>{event.description}</p>
-                                <p>{event.event_date}</p>
-                                <p>{event.status}</p>
-                            </li>
-                        </a>
-                        <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
+                        <div className='flex flex-col'>
+                            <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
+                                <li className='min-w-72 text-xl'>
+                                    <p>No.{event.id}</p>
+                                    <p>{event.capacity}</p>
+                                    <p>{event.money}</p>
+                                    <p>{event.description}</p>
+                                    <p>{event.event_date}</p>
+                                    <p>{event.status}</p>
+                                </li>
+                            </a>
+                            <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
+                        </div>
                         <div className='my-auto'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
                             <RemoveButton removePath = {`/events/${event.id}/cancel`} name="削除"/>
