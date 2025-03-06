@@ -39,7 +39,7 @@ export default function ReserveEventPage() {
 
     // 予約処理
     const handleReserve = async(e: React.FormEvent) => {
-        e.preventDefault
+        e.preventDefault()
         const token = localStorage.getItem('token')
         if(!token) {
             router.push('/login')
