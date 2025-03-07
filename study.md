@@ -67,6 +67,10 @@ php artisan make:model Event --migration
 php artisan make:model Category --migration
 php artisan make:model Reservation --migration
 
+以下コマンドでUsers,Eventsのシーダーを作成
+php artisan make:seeder UsersTableSeeder
+php artisan make:seeder EventsTableSeeder
+
 ## API設計
 
 下記記事を参考にした
