@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LogoutButton } from "./components/LogoutButton";
+import { ProfileImageLink } from "./components/ProfileImageLink";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,8 @@ export default function RootLayout({
       >
         <header className="flex bg-cyan-400 justify-between align-middle min-w-max">
           <p className="text-2xl font-bold my-auto ml-16 text-white">Meetup_link</p>
-          <nav className="justify-end p-4">
+          <nav className="justify-end p-4 flex gap-4">
+            <ProfileImageLink/>
             <LogoutButton/>
           </nav>
         </header>
