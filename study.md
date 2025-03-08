@@ -70,6 +70,8 @@ php artisan make:model Reservation --migration
 以下コマンドでUsers,Eventsのシーダーを作成
 php artisan make:seeder UsersTableSeeder
 php artisan make:seeder EventsTableSeeder
+シーダーは下記コマンドでデータを挿入
+docker compose exec app php artisan migrate:fresh --seed
 
 ## API設計
 
