@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->bigIncrements("id");
-            $table->integer("category_id");
+            $table->unsignedBigInteger("user_id");
+            $table->unsignedBigInteger("category_id");
             $table->dateTime("event_date");
             $table->integer("capacity");
             // 桁数8の小数点2桁
@@ -22,6 +23,8 @@ return new class extends Migration
             $table->string("description");
             // $table->float();
             $table->timestamps();
+            // リレーション
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

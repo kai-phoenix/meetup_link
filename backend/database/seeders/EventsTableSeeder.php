@@ -15,6 +15,7 @@ class EventsTableSeeder extends Seeder
     {
         Event::create([
             'event_date' => '2025-03-07',
+            'user_id' => 1,
             'category_id' => 1,
             'capacity' => 100,
             'money' => 1000,
@@ -23,6 +24,7 @@ class EventsTableSeeder extends Seeder
         ]);
         Event::create([
             'event_date' => '2025-03-07',
+            'user_id' => 1,
             'category_id' => 2,
             'capacity' => 4,
             'money' => 400,
@@ -31,6 +33,7 @@ class EventsTableSeeder extends Seeder
         ]);
         Event::create([
             'event_date' => '2025-03-07',
+            'user_id' => 2,
             'category_id' => 3,
             'capacity' => 20,
             'money' => 4000,
