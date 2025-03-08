@@ -8,6 +8,6 @@ export function ReturnButton({name}:Readonly<{name:string}>) {
         router.back()
     }
     return (
-        <button onClick={handleReturnClick} className="py-1 px-2.5 bg-gray-500 hover:bg-gray-700 rounded-2xl text-white font-black text-sm">{name}</button>
+        <button type="button" onClick={handleReturnClick} className="py-2 px-2 bg-gray-500 hover:bg-gray-700 rounded-2xl text-white font-black text-sm w-14">{name}</button>
     )
 }
