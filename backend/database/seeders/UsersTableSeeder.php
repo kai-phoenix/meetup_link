@@ -16,14 +16,12 @@ class UsersTableSeeder extends Seeder
         // 2件作成
         User::create([
             'name' => 'sample_user1',
-            'account' => 'sample_account1',
             'email' => 'sample_user1@example.com',
             'password' => bcrypt('asdf1234'),
             'authority' => 1,
         ]);
         User::create([
             'name' => 'sample_user2',
-            'account' => 'sample_account2',
             'email' => 'sample_user2@example.com',
             'password' => bcrypt('asdf1234'),
             'authority' => 0,

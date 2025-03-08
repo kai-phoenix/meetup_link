@@ -7,8 +7,7 @@ erDiagram
 
     "Users(ユーザー)" {
         int id PK "ユーザーID"
-        varchar(255) name "ユーザー名"
-        varchar(100) account "ユーザーアカウント"
+        varchar(255) name UK "ユーザー名"
         varchar(255) email "メールアドレス"
         varchar(255) email_verified_at "メール認証"
         varchar(255) password "パスワード"
