@@ -64,6 +64,7 @@ class EventController extends Controller
             'money' => 'required|integer',
             'description' => 'required|string',
             'status' => 'required|integer',
+            'image_path' => 'nullable|string|max:2048'
         ]);
         // 更新
         $event->update($validated);

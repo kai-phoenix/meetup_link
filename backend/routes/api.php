@@ -14,6 +14,10 @@ Route::post('/login', [AuthController::class,'login']);
 Route::middleware(('auth:sanctum'))->group(function () {
     // イベント表示
     Route::get('/events', [EventController::class,'index']);
+    // イベント作成画面へ遷移
+    Route::get('/events/create',[EventController::class,'create']);
+    // イベント作成
+    Route::post('/events',[EventController::class,'store']);
     // イベント詳細表示
     Route::get('/events/{id}/edit', [EventController::class,'show']);
     // イベント編集

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal("money",8,2);
             $table->tinyInteger("status");
             $table->string("description");
-            // $table->float();
+            $table->string('image_path')->nullable();
             $table->timestamps();
             // リレーション
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

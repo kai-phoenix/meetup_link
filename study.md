@@ -82,3 +82,9 @@ https://zenn.dev/arsaga/articles/4a72774b1c93d2
 ## デザイン
 下記URLの実装例から拡張して作成
 https://ui8.net/royalz-store/products/ella-mobile-wallet-app-ui-kit?rel=timer
+
+## 画像
+下記URLからサンプル画像を追加
+https://www.photo-ac.com/
+下記コマンドで/api/storage/app/publicへシンボリックリンクを作成
+docker compose exec app php artisan storage:link

@@ -33,6 +33,7 @@ erDiagram
         decimal money "参加料金"
         tinyint status "イベント状態"
         varchar(1000) description "イベント説明"
+        varchar(1000) image_path "投稿画像URL"
         timestamp created_at "作成日時"
         timestamp updated_at "更新日時"
     }

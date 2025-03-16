@@ -21,6 +21,7 @@ class EventsTableSeeder extends Seeder
             'money' => 1000,
             'status' => 1,
             'description' => 'sample_event1',
+            'image_path' => '',
         ]);
         Event::create([
             'event_date' => '2025-03-07',
@@ -30,6 +31,7 @@ class EventsTableSeeder extends Seeder
             'money' => 400,
             'status' => 0,
             'description' => 'sample_event2',
+            'image_path' => '',
         ]);
         Event::create([
             'event_date' => '2025-03-07',
@@ -39,6 +41,7 @@ class EventsTableSeeder extends Seeder
             'money' => 4000,
             'status' => 2,
             'description' => 'sample_event3',
+            'image_path' => '',
         ]);
     }
 }
