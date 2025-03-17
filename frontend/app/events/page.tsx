@@ -50,12 +50,12 @@ export default function EventPage() {
             </div>
             <ul className="max-w-screen-sm">
                 {event.map((event: Event) => (
-                    <div key={event.id}>
+                    <li key={event.id}>
                         <div className='my-2 flex justify-end'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
                             <RemoveButton removePath = {`/events/${event.id}/cancel`} name="削除"/>
                         </div>
-                        <Image src ="http://proxy:80/storage/event_images/sample1.jpg" width={500} height={500} alt="Event image"/>
+                        <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/sample1.jpg`} width={500} height={500} alt="Event image"/>
                         <div className='flex align-center border-2 border-cyan-200 mb-8 p-4 min-w-max shadow-md shadow-cyan-500'>
                             <div className='my-auto'>
                                 <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
@@ -63,19 +63,19 @@ export default function EventPage() {
                             </div>
                             <div className='flex flex-col'>
                                 <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
-                                    <li className='min-w-72 text-xl'>
+                                    <div className='min-w-72 text-xl'>
                                         <p>No.{event.id}</p>
                                         <p>{event.capacity}</p>
                                         <p>{event.money}</p>
                                         <p>{event.description}</p>
                                         <p>{event.event_date}</p>
                                         <p>{event.status}</p>
-                                    </li>
+                                    </div>
                                 </a>
                                 <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
                             </div>
                         </div>
-                    </div>
+                    </li>
                 ))}
             </ul>
         </div>

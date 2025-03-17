@@ -3,6 +3,9 @@ FROM node:23.6.1
 # FROM node:18-alpine
 #作業ディレクトリを/appに設定
 WORKDIR /app/
+# sharpに必要な依存ライブラリをインストール
+RUN apt-get update && \
+    apt-get install -y libc6-dev build-essential gcc autoconf automake zlib1g-dev libpng-dev libvips-dev
 # package.json,package-lock.jsonを先にコピー
 COPY frontend/package*.json ./
 #依存関係をインストール
