@@ -88,3 +88,12 @@ https://ui8.net/royalz-store/products/ella-mobile-wallet-app-ui-kit?rel=timer
 https://www.photo-ac.com/
 下記コマンドで/api/storage/app/publicへシンボリックリンクを作成
 docker compose exec app php artisan storage:link
+下記コマンドでライブラリを入れた際は最適化を実施
+cd frontend
+rm -rf .next node_modules package-lock.json
+(Windows:Remove-Item -Recurse -Force node_modules, package-lock.json)
+npm install
+
+cd ../
+docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.dev.yml up -d --build frontend-dev
