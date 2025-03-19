@@ -34,15 +34,16 @@ export default function LoginPage() {
             }
             // 成功ならトークンやユーザー情報を受け取る
             const data = await res.json()
-            console.log(data)
+            // console.log(data)
             // ログイン失敗時の処理
             if(data.message === "Invalid credentials"){
                 alert('メールアドレスかパスワードが間違っております。') 
                 return
             }
             alert('ログイン成功:'+data.user?.email)
-            // トークンをローカルストレージへ保存
+            // ユーザー情報,トークンをローカルストレージへ保存
             localStorage.setItem('token',data.token)
+            localStorage.setItem('user',JSON.stringify(data.user))
             // 次ページへ遷移
             router.push('/events')
         }

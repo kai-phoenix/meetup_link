@@ -15,8 +15,12 @@ export default function EditEventPage() {
     const [capacity,setCapacity] = useState('')
     const [money,setMoney] = useState('')
     const [description,setDescription] = useState('')
-    const [status,setStatus] = useState('')
-
+    // const [status,setStatus] = useState('')
+    const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files){
+            setFile(e.target.files[0]);
+        }
+    }
     useEffect(()=>{
         const token = localStorage.getItem('token')
         // トークンがなければログイン画面へリダイレクト
@@ -47,7 +51,7 @@ export default function EditEventPage() {
                 setCapacity(data.event.capacity)
                 setMoney(data.event.money)
                 setDescription(data.event.description)
-                setStatus(data.event.status)
+                // setStatus(data.event.status)
             }
         })
     },[router,params.id])
@@ -88,32 +92,38 @@ export default function EditEventPage() {
         return <div>ロード中・・・</div>
     }
     return (
-        <div>
-            <h1>イベント編集</h1>
-            <form onSubmit={handleUpdate}>
-                <div>
+        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+            <h1 className="my-5 text-2xl font-bold">イベント編集</h1>
+            <form onSubmit={handleUpdate} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
+                <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>日時:</label>
                     <input type='datetime' value={eventDate} onChange={e=>setEventDate(e.target.value)}/>
                 </div>
-                <div>
+                <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>定員:</label>
                     <input type='number' value={capacity} onChange={e=>setCapacity(e.target.value)}/>
                 </div>
-                <div>
+                <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>料金:</label>
                     <input type='number' value={money} onChange={e=>setMoney(e.target.value)}/>
                 </div>
-                <div>
+                <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>説明:</label>
                     <input type='text' value={description} onChange={e=>setDescription(e.target.value)}/>
                 </div>
-                <div>
+                {/* <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>状態:</label>
                     <input type='text' value={status} onChange={e=>setStatus(e.target.value)}/>
+                </div> */}
+                <div className='mb-2.5 w-11/12 mx-auto'>
+                    <label>ファイル:</label><br/>
+                    <input type='file' onChange={handleFileChange}/>
                 </div>
-                <UpdateButton name="更新"/>
+                <div className='mt-2.5 mb-2.5 w-11/12 mx-auto flex gap-1'>
+                    <UpdateButton name="更新"/>
+                    <ReturnButton name="戻る"/>
+                </div>
             </form>
-            <ReturnButton name="戻る"/>
         </div>
     )
 }

@@ -14,16 +14,18 @@ export default function CreateEventPage() {
     const [description,setDescription] = useState('')
     // const [status,setStatus] = useState('')
     const [file,setFile] = useState<File|null>(null)
-
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files){
             setFile(e.target.files[0]);
         }
     }
 
-    const handleCreate = async(e:React.FormEvent) => {
+    const handleSubmit = async(e:React.FormEvent) => {
+        const user = JSON.parse(localStorage.getItem('user')|| '{}')
+        console.log(user)
         e.preventDefault();
         const formData = new FormData();
+        formData.append('user_id',user.id);
         formData.append('event_date',eventDate);
         formData.append('capacity',capacity);
         formData.append('money',money);
@@ -38,7 +40,7 @@ export default function CreateEventPage() {
             return;
         }
         try {
-            const res = await fetch('http://localhost:8000/api/events/create',{
+            const res = await fetch('http://localhost:8000/api/events/',{
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -64,7 +66,7 @@ export default function CreateEventPage() {
     return (
         <div className="w-6/12 mx-auto max-w-lg min-w-96">
             <h1 className="my-5 text-2xl font-bold">イベント作成</h1>
-            <form onSubmit={handleCreate} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
+            <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label htmlFor="date">日時:</label><br/>
                     <input type='date' value={eventDate} onChange={e=>setEventDate(e.target.value)} className='border border-black w-full'/>

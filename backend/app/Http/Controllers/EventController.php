@@ -33,19 +33,23 @@ class EventController extends Controller
     {
         // バリデーション
         $validated = $request -> validate([
+            'user_id' => 'required|integer',
             'event_date' => 'required|date',
             'capacity' => 'required|integer',
             'money' => 'required|integer',
             'description' => 'required|string',
-            'status' => 'required|integer',
+            // 'status' => 'required|integer',
             'image' => 'nullable|string|max:2048'
         ]);
         // ファイルアップロード
-        if($request->hasFile('image_path'))
+        if($request->hasFile('image'))
         {
             $path=$request->file('image')->store('public/images');
             $validated['image_path'] = basename($path);
         }
+        // 状態イベント初期入力
+        $validated['category_id'] = 0;
+        $validated['status'] = 0;
         $event = Event::create($validated);
         return response()->json(['event'=> $event],201);
     }
