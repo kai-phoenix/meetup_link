@@ -31,7 +31,23 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // バリデーション
+        $validated = $request -> validate([
+            'event_date' => 'required|date',
+            'capacity' => 'required|integer',
+            'money' => 'required|integer',
+            'description' => 'required|string',
+            'status' => 'required|integer',
+            'image' => 'nullable|string|max:2048'
+        ]);
+        // ファイルアップロード
+        if($request->hasFile('image_path'))
+        {
+            $path=$request->file('image')->store('public/images');
+            $validated['image_path'] = basename($path);
+        }
+        $event = Event::create($validated);
+        return response()->json(['event'=> $event],201);
     }
 
     /**
