@@ -40,7 +40,7 @@ export default function LoginPage() {
                 alert('メールアドレスかパスワードが間違っております。') 
                 return
             }
-            alert('ログイン成功:'+data.user?.email)
+            alert(data.user?.name+'さん:ログインに成功しました。')
             // ユーザー情報,トークンをローカルストレージへ保存
             localStorage.setItem('token',data.token)
             localStorage.setItem('user',JSON.stringify(data.user))
