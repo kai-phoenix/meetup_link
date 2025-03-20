@@ -73,6 +73,8 @@ php artisan make:seeder EventsTableSeeder
 シーダーは下記コマンドでデータを挿入
 docker compose exec app php artisan migrate:fresh --seed
 
+laravelにnextjsからFormDataをPUTメソッドで送信するとうまく受け取れない場合がある
+
 ## API設計
 
 下記記事を参考にした
