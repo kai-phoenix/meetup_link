@@ -64,11 +64,11 @@ export default function EventPage() {
                                 <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
                                     <div className='min-w-72 text-xl'>
                                         <p>No.{event.id}</p>
-                                        <p>{event.capacity}</p>
-                                        <p>{event.money}</p>
-                                        <p>{event.description}</p>
-                                        <p>{event.event_date}</p>
-                                        <p>{event.status}</p>
+                                        <p>上限人数:{event.capacity}</p>
+                                        <p>参加料:{event.money}</p>
+                                        <p>イベント説明:{event.description}</p>
+                                        <p>日時:{event.event_date}</p>
+                                        {/* <p>{event.status}</p> */}
                                     </div>
                                 </a>
                                 <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>

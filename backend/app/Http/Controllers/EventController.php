@@ -46,7 +46,8 @@ class EventController extends Controller
             'money' => 'required|integer',
             'description' => 'required|string',
             // 'status' => 'required|integer',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048',
+            'existing_image_path' => 'nullable|string'
         ]);
         // Log::info($request->file('image'));
         // ファイルアップロード
@@ -54,7 +55,11 @@ class EventController extends Controller
         {
             $path=$request->file('image')->store('event_images','public');
             $validated['image_path'] = basename($path);
-            Log::info('画像パス:'.$validated['image_path']);
+            // Log::info('画像パス:'.$validated['image_path']);
+        }
+        else
+        {
+            $validated['image_path'] = $request->input('existing_image_path');
         }
         // 状態イベント初期入力
         $validated['category_id'] = 1;
@@ -86,15 +91,29 @@ class EventController extends Controller
     public function update(Request $request, string $id)
     {
         $event=Event::findOrFail($id);
+        // FormDataからの値を整数値に
+        $request->merge([
+            'user_id' => (int)$request->input('user_id'),
+            'capacity' => (int)$request->input('capacity'),
+            'money' => (int)$request->input('money'),
+        ]);
         // バリデーション
         $validated = $request -> validate([
             'event_date' => 'required|date',
             'capacity' => 'required|integer',
             'money' => 'required|integer',
             'description' => 'required|string',
-            'status' => 'required|integer',
+            // 'status' => 'required|integer',
             'image_path' => 'nullable|string|max:2048'
         ]);
+        // 状態イベント初期入力
+        $validated['category_id'] = 1;
+        $validated['status'] =0 ;
+        if($request->hasFile('image'))
+        {
+            $path=$request->file('image')->store('event_images','public');
+            $validated['image_path'] = basename($path);
+        }
         // 更新
         $event->update($validated);
         return response() -> json(['event'=>$event],200);

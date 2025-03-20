@@ -1,6 +1,7 @@
 'use client'
 import { useState,useEffect} from 'react'
 import { useRouter,useParams} from 'next/navigation'
+import Image from 'next/image'
 import { Event } from '@/types/event'
 import { UpdateButton } from '@/app/components/UpdateButton'
 import { ReturnButton } from '@/app/components/ReturnButton'
@@ -15,19 +16,21 @@ export default function EditEventPage() {
     const [capacity,setCapacity] = useState('')
     const [money,setMoney] = useState('')
     const [description,setDescription] = useState('')
+    const [file,setFile] = useState<File|null>(null)
+    const [imagePath,setImagePath] = useState('')
     // const [status,setStatus] = useState('')
+    const token = localStorage.getItem('token')
+    // トークンがなければログイン画面へリダイレクト
+    if(!token) {
+        router.push('/login')
+        return
+    }
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files){
             setFile(e.target.files[0]);
         }
     }
     useEffect(()=>{
-        const token = localStorage.getItem('token')
-        // トークンがなければログイン画面へリダイレクト
-        if(!token) {
-            router.push('/login')
-            return
-        }
         // Bearerトークンを付与し、イベント一覧を取得
         fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
             headers: {
@@ -47,42 +50,48 @@ export default function EditEventPage() {
             console.log(data)
             if(data?.event){
                 setEvent(data.event)
-                setEventDate(data.event.event_date)
+                setEventDate(data.event.event_date.split(' ')[0])
                 setCapacity(data.event.capacity)
                 setMoney(data.event.money)
                 setDescription(data.event.description)
+                setImagePath(data.event.image_path)
                 // setStatus(data.event.status)
             }
         })
     },[router,params.id])
 
-    const handleUpdate = async(e:React.FormEvent) => {
+    const handleSubmit = async(e:React.FormEvent) => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
         e.preventDefault()
-        const token = localStorage.getItem('token')
-        if(!token) {
-            router.push('/login')
-            return
+        console.log(eventDate)
+        const formData =new FormData()
+        formData.append('user_id',user.id.toString())
+        formData.append('event_date',eventDate);
+        formData.append('capacity',capacity);
+        formData.append('money',money);
+        formData.append('description',description);
+        formData.append('_method','PUT');
+        // formData.append('status',status);
+        // ファイルが追加された時のみFormDataに追加
+        if(file) {
+            formData.append('image',file);
         }
-        const res = await fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
-            method: 'PUT',
+        else {
+            formData.append('existing_image_path',imagePath)
+        }
+        const res = await fetch(`http://localhost:8000/api/events/${params.id}`,{
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                event_date: eventDate,
-                capacity: capacity,
-                money: money,
-                description: description,
-                status: status
-            })
+            body: formData
         })
         if(res.ok) {
             // 更新成功
             const data = await res.json()
             console.log('更新成功！',data)
-            router.push(`/events/${params.id}`)
+            router.push('/events')
         }
         else {
             console.error('更新失敗')
@@ -94,10 +103,10 @@ export default function EditEventPage() {
     return (
         <div className="w-6/12 mx-auto max-w-lg min-w-96">
             <h1 className="my-5 text-2xl font-bold">イベント編集</h1>
-            <form onSubmit={handleUpdate} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
+            <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
                 <div className='mb-2.5 w-11/12 mx-auto'>
-                    <label>日時:</label>
-                    <input type='datetime' value={eventDate} onChange={e=>setEventDate(e.target.value)}/>
+                    <label>開催日:</label>
+                    <input type='date' value={eventDate} onChange={e=>setEventDate(e.target.value)}/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>定員:</label>
@@ -108,13 +117,17 @@ export default function EditEventPage() {
                     <input type='number' value={money} onChange={e=>setMoney(e.target.value)}/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
-                    <label>説明:</label>
+                    <label>詳細:</label>
                     <input type='text' value={description} onChange={e=>setDescription(e.target.value)}/>
                 </div>
                 {/* <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>状態:</label>
                     <input type='text' value={status} onChange={e=>setStatus(e.target.value)}/>
                 </div> */}
+                <div className='mb-2.5 w-11/12 mx-auto'>
+                    <label>現在の画像:</label><br/>
+                    <Image src = {`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${imagePath}`} alt="現在の画像" width = {200} height ={200} className='object-cover pr-4'/>
+                </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>ファイル:</label><br/>
                     <input type='file' onChange={handleFileChange}/>
