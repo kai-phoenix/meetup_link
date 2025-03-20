@@ -118,6 +118,14 @@ class EventController extends Controller
         $event->update($validated);
         return response() -> json(['event'=>$event],200);
     }
+    public function destroy(string $id)
+    {
+        $event=Event::findOrFail($id);
+        $event->delete();
+        return response()->json([
+            'message'=>'イベントを削除しました。'
+        ]);
+    }
     public function reserve(Request $request,string $id)
     {
         // イベント、ユーザー情報取得

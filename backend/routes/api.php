@@ -22,9 +22,11 @@ Route::middleware(('auth:sanctum'))->group(function () {
     Route::get('/events/{id}/edit', [EventController::class,'show']);
     // イベント編集
     Route::put('/events/{id}', [EventController::class,'update']);
+    // イベント削除
+    Route::delete('/events/{id}', [EventController::class,'destroy']);
     // イベント予約
     Route::post('/events/{id}/reserve', [EventController::class,'reserve']);
-    // イベントキャンセル
+    // イベント予約キャンセル
     Route::delete('/events/{id}/reserve', [EventController::class,'cancel']);
     // プロフィール表示
     Route::get('/profile', [ProfileController::class,'show']);
