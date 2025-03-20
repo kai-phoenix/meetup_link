@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime("event_date");
             $table->integer("capacity");
             // 桁数8の小数点2桁
-            $table->decimal("money",8,2);
+            $table->integer("money");
             $table->tinyInteger("status");
             $table->string("description");
             $table->string('image_path')->nullable();

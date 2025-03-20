@@ -41,7 +41,7 @@ class EventsTableSeeder extends Seeder
             'money' => 4000,
             'status' => 2,
             'description' => 'sample_event3',
-            'image_path' => 'sample3.png',
+            'image_path' => 'sample3.jpg',
         ]);
     }
 }
