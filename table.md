@@ -30,7 +30,7 @@ erDiagram
         int category_id FK "カテゴリーID"
         datetime event_date "開催日時"
         int capacity "定員数"
-        decimal money "参加料金"
+        int money "参加料金"
         tinyint status "イベント状態"
         varchar(1000) description "イベント説明"
         varchar(1000) image_path "投稿画像URL"
