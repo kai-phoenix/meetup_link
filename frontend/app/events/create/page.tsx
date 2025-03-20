@@ -22,17 +22,16 @@ export default function CreateEventPage() {
 
     const handleSubmit = async(e:React.FormEvent) => {
         const user = JSON.parse(localStorage.getItem('user')|| '{}')
-        console.log(user)
         e.preventDefault();
         const formData = new FormData();
-        formData.append('user_id',user.id);
+        formData.append('user_id', user.id.toString());
         formData.append('event_date',eventDate);
         formData.append('capacity',capacity);
         formData.append('money',money);
         formData.append('description',description);
         // formData.append('status',status);
         if(file) {
-            formData.append('file',file);
+            formData.append('image',file);
         }
         const token = localStorage.getItem('token');
         if(!token) {

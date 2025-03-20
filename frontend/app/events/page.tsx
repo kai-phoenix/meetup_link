@@ -57,7 +57,8 @@ export default function EventPage() {
                         </div>
                         <div className='flex align-center border-2 border-cyan-200 mb-8 p-4 min-w-80 shadow-md shadow-cyan-500'>
                             <div className = 'relative w-full h-auto aspect-square min-w-72 max-w-lg mb-auto'>
-                                <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/sample1.jpg`} alt="Event image" fill className='object-cover pr-4'/>
+                                {/* <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/sample1.jpg`} alt="Event image" fill className='object-cover pr-4'/> */}
+                                <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
                             </div>
                             <div className='flex flex-col justify-between'>
                                 <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>

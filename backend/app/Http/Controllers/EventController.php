@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -31,6 +32,12 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        // FormDataからの値を整数値に
+        $request->merge([
+            'user_id' => (int)$request->input('user_id'),
+            'capacity' => (int)$request->input('capacity'),
+            'money' => (int)$request->input('money'),
+        ]);
         // バリデーション
         $validated = $request -> validate([
             'user_id' => 'required|integer',
@@ -39,16 +46,18 @@ class EventController extends Controller
             'money' => 'required|integer',
             'description' => 'required|string',
             // 'status' => 'required|integer',
-            'image' => 'nullable|string|max:2048'
+            'image' => 'nullable|image|max:2048'
         ]);
+        // Log::info($request->file('image'));
         // ファイルアップロード
         if($request->hasFile('image'))
         {
-            $path=$request->file('image')->store('public/images');
+            $path=$request->file('image')->store('event_images','public');
             $validated['image_path'] = basename($path);
+            Log::info('画像パス:'.$validated['image_path']);
         }
         // 状態イベント初期入力
-        $validated['category_id'] = 0;
+        $validated['category_id'] = 1;
         $validated['status'] = 0;
         $event = Event::create($validated);
         return response()->json(['event'=> $event],201);

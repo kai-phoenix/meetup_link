@@ -5,4 +5,5 @@ export interface Event {
     money: string,
     status: number,
     description:string,
+    image_path:string,
 }
