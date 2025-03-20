@@ -30,7 +30,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
         <header className="flex bg-cyan-400 justify-between align-middle min-w-max">
-          <p className="text-2xl font-bold my-auto ml-16 text-white">Meetup_link</p>
+          {/* <a href = '/events'></a> */}
+          <a href='/events' className="text-2xl font-bold my-auto ml-16 text-white">Meetup_link</a>
           <nav className="justify-end p-4 flex gap-4">
             <ProfileImageLink/>
             <LogoutButton/>
