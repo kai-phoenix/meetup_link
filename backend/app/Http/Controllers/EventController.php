@@ -134,7 +134,7 @@ class EventController extends Controller
 
         //定員チェック
         $currentCount=0;
-        $reservations=Reservation::where('event_id',$event->id);
+        $reservations=Reservation::where('event_id',$event->id)->get();
         foreach($reservations as $reservation)
         {
             $currentCount+=$reservation->quantity;
@@ -150,6 +150,7 @@ class EventController extends Controller
         $new_reservation->user_id=$user->id;
         $new_reservation->event_id=$event->id;
         $new_reservation->party=$request->input('party');
+        // $event = Reservation::create($validated);
 
         return response()->json([
             "message"=>"新規予約できました！",

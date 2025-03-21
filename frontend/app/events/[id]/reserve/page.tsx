@@ -9,7 +9,7 @@ export default function ReserveEventPage() {
     const params = useParams()
 
     const [event, setEvent] = useState<Event|null>(null)
-    const [party,setParty] = useState(1)
+    const [party, setParty] = useState(1)
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -65,30 +65,50 @@ export default function ReserveEventPage() {
             alert(data.message ||'予約できませんでした')
         }
     }
+    const formatDate = (dateString:string) => {
+        const date = new Date(dateString)
+        return `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
+    }
     if(!event) {
         return <div>ロード中…</div>
     }
 
     return (
-        <div>
+        <div className="w-6/12 mx-auto max-w-lg min-w-96">
             <h1 className="text-2xl py-4">イベント予約</h1>
-            <div className="flex align-center border-2 border-cyan-200 w-7/12 mb-8 p-4 min-w-max shadow-md shadow-cyan-500">
-                <p>イベントID:{event.id}</p>
-                <p>開催日:{event.event_date}</p>
-                <p>定員:{event.capacity}</p>
-                <p>料金:{event.money}</p>
-                <p>説明:{event.description}</p>
+            <div className="flex justify-center flex-col text-xl space-y-2 my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
+                <div className="font-semibold text-gray-700 mb-8">
+                    <span>No.{event.id}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold text-gray-700">定員数</span>
+                    <span>{event.capacity} 人</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold text-gray-700">参加料</span>
+                    <span>{event.money} 円</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="text-gray-700 font-semibold">日時</span>
+                    <span>{formatDate(event.event_date)}</span>
+                </div>
+                <div>
+                    <span className="font-semibold text-gray-700 block">イベント説明</span>
+                    <span className="block pl-2 mb-8">{event.description}</span>
+                </div>
             </div>
             <form onSubmit = {handleReserve}>
-                <div>
+                <div className='flex flex-col gap-1'>
                     <label>予約人数</label>
                     <input type ="number" value = {party} onChange={e=>setParty(Number(e.target.value))} min={1}/>
                 </div>
-                <button type="submit" className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-3xl text-sm">
-                    予約
-                </button>
+                <div className='mt-2.5 mb-2.5 mx-auto flex gap-1'>
+                    <button type="submit" className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-3xl text-sm">
+                        予約
+                    </button>
+                    <ReturnButton name="戻る"></ReturnButton>
+                </div>
             </form>
-            <ReturnButton name="戻る"></ReturnButton>
         </div>
     )
 

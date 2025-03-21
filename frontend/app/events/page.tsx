@@ -115,7 +115,7 @@ export default function EventPage() {
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="font-semibold text-gray-700 block">予約数</span>
-                                        <span className="block mb-2">{event.description}</span>
+                                        <span className="block mb-2">{event.description}人</span>
                                     </div>
                                     {/* <p>{event.status}</p> */}
                                 </div>
