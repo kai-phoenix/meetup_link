@@ -65,6 +65,10 @@ export default function EventPage() {
             alert('削除に失敗しました')
         }
     }
+    const formatDate = (dateString:string) => {
+        const date = new Date(dateString)
+        return `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
+    }
     if(!event) {
         return <div>ロード中・・・</div>
     }
@@ -89,17 +93,35 @@ export default function EventPage() {
                                 <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
                             </div>
                             <div className='flex flex-col justify-between'>
-                                <a href = {`/events/${event.id}/edit`} className='mr-4 my-4 pr-4 py-4 rounded-lg'>
-                                    <div className='min-w-72 text-xl'>
-                                        <p>No.{event.id}</p>
-                                        <p>上限人数:{event.capacity}</p>
-                                        <p>参加料:{event.money}</p>
-                                        <p>イベント説明:{event.description}</p>
-                                        <p>日時:{event.event_date}</p>
-                                        {/* <p>{event.status}</p> */}
+                                <div className='min-w-72 text-xl space-y-2 mr-4 pr-4 rounded-lg'>
+                                    <div className="font-semibold text-gray-700 mb-8">
+                                        <span>No.{event.id}</span>
                                     </div>
-                                </a>
-                                <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
+                                    <div className="flex justify-between">
+                                        <span className="font-semibold text-gray-700">定員数</span>
+                                        <span>{event.capacity} 人</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-semibold text-gray-700">参加料</span>
+                                        <span>{event.money} 円</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700 font-semibold">日時</span>
+                                        <span>{formatDate(event.event_date)}</span>
+                                    </div>
+                                    <div>
+                                        <span className="font-semibold text-gray-700 block">イベント説明</span>
+                                        <span className="block pl-2 mb-8">{event.description}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-semibold text-gray-700 block">予約数</span>
+                                        <span className="block mb-2">{event.description}</span>
+                                    </div>
+                                    {/* <p>{event.status}</p> */}
+                                </div>
+                                <div className='mr-4 pr-4'>
+                                    <ReservationButton reservationPath={`/events/${event.id}/reserve`}></ReservationButton>
+                                </div>
                             </div>
                         </div>
                     </li>
