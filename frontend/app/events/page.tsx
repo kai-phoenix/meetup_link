@@ -39,6 +39,31 @@ export default function EventPage() {
             }
         })
     },[router])
+    const handleRemoveEvent = async(id:number)=> {
+        const token = localStorage.getItem('token')
+        if (!token) {
+            router.push('/login')
+            return
+        }
+        const formData = new FormData()
+        formData.append('_method','DELETE')
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`,{
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        })
+        if(res.ok) {
+            setEvent(prevEvents=>prevEvents?prevEvents.filter(event=>event.id !== id):null)
+            alert('削除に成功しました')
+        }
+        else {
+            alert('削除に失敗しました')
+        }
+    }
     if(!event) {
         return <div>ロード中・・・</div>
     }
@@ -53,7 +78,8 @@ export default function EventPage() {
                     <li key={event.id}>
                         <div className='my-2 flex justify-end'>
                             <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
-                            <RemoveButton removePath = {`events/${event.id}`} name="削除"/>
+                            {/* <RemoveButton removePath = {`events/${event.id}`} name="削除"/> */}
+                            <RemoveButton removePath = {`events/${event.id}`} name="削除" onRemove={()=>handleRemoveEvent(event.id)}/>
                         </div>
                         <div className='flex align-center border-2 border-cyan-200 mb-8 p-4 min-w-80 shadow-md shadow-cyan-500'>
                             <div className = 'relative w-full h-auto aspect-square min-w-72 max-w-lg mb-auto'>
