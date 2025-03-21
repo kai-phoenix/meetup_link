@@ -10,6 +10,7 @@ import { ReservationButton } from '../components/ReservationButton'
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
     const router = useRouter()
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
 
     useEffect(()=>{
         const token = localStorage.getItem('token')
@@ -76,11 +77,12 @@ export default function EventPage() {
             <ul>
                 {event.map((event: Event) => (
                     <li key={event.id}>
-                        <div className='my-2 flex justify-end'>
-                            <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
-                            {/* <RemoveButton removePath = {`events/${event.id}`} name="削除"/> */}
-                            <RemoveButton removePath = {`events/${event.id}`} name="削除" onRemove={()=>handleRemoveEvent(event.id)}/>
-                        </div>
+                        {user.id === event.user_id && (
+                            <div className='my-2 flex justify-end'>
+                                <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
+                                <RemoveButton removePath = {`events/${event.id}`} name="削除" onRemove={()=>handleRemoveEvent(event.id)}/>
+                            </div>
+                        )}
                         <div className='flex align-center border-2 border-cyan-200 mb-8 p-4 min-w-80 shadow-md shadow-cyan-500'>
                             <div className = 'relative w-full h-auto aspect-square min-w-72 max-w-lg mb-auto'>
                                 {/* <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/sample1.jpg`} alt="Event image" fill className='object-cover pr-4'/> */}
