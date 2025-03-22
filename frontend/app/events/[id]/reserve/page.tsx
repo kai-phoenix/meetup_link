@@ -53,7 +53,7 @@ export default function ReserveEventPage() {
                 'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
-                party: party
+                quantity: party
             })
         })
         if(res.ok) {
