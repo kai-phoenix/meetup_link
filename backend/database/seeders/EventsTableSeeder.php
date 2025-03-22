@@ -27,7 +27,7 @@ class EventsTableSeeder extends Seeder
             'event_date' => '2025-03-07',
             'user_id' => 1,
             'category_id' => 2,
-            'capacity' => 4,
+            'capacity' => 10,
             'money' => 400,
             'status' => 0,
             'description' => 'sample_event2',
