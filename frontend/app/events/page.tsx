@@ -10,7 +10,7 @@ import { Reservation } from '@/types/reservation'
 
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
-    const [reservation, setReservation] = useState<Reservation[]>([])
+    const [reservation, setReservation] = useState<{ [key: number]: number }>({})
     const router = useRouter()
     const user = JSON.parse(localStorage.getItem('user') || '{}')
 
