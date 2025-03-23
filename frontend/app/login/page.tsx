@@ -1,11 +1,13 @@
 'use client'
 import React, {useState} from 'react'
+import { useAuth } from '../components/AuthContext';
 import {useRouter} from 'next/navigation'
 
 export default function LoginPage() {
     // フォームの入力を管理するReactのStateを定義
     const[name,setName] = useState('')
     const[password,setPassword] = useState('')
+    const { login } = useAuth();
 
     // 画面遷移や再描画に使用する
     const router = useRouter()
@@ -34,6 +36,7 @@ export default function LoginPage() {
             }
             // 成功ならトークンやユーザー情報を受け取る
             const data = await res.json()
+            const {token} = data
             // console.log(data)
             // ログイン失敗時の処理
             if(data.message === "Invalid credentials"){
@@ -44,6 +47,7 @@ export default function LoginPage() {
             // ユーザー情報,トークンをローカルストレージへ保存
             localStorage.setItem('token',data.token)
             localStorage.setItem('user',JSON.stringify(data.user))
+            login(token)
             // 次ページへ遷移
             router.push('/events')
         }

@@ -1,8 +1,10 @@
 'use client'
 import {useRouter} from 'next/navigation'
+import { useAuth } from '../components/AuthContext'
 
 export function LogoutButton() {
     const router = useRouter()
+    const { logout } = useAuth();
     const handleLogout = async() =>{
         const token = localStorage.getItem('token')
         if(token) {
@@ -15,6 +17,7 @@ export function LogoutButton() {
             })
         }
         localStorage.removeItem('token')
+        logout()
         router.push('/login')
     }
     return (
