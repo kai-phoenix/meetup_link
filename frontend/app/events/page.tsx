@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { EditButton } from '../components/EditButton'
 import { RemoveButton } from '../components/RemoveButton'
 import { ReservationButton } from '../components/ReservationButton'
-import { Reservation } from '@/types/reservation'
 
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
