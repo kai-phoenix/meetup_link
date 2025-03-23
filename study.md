@@ -70,6 +70,7 @@ php artisan make:model Reservation --migration
 以下コマンドでUsers,Eventsのシーダーを作成
 php artisan make:seeder UsersTableSeeder
 php artisan make:seeder EventsTableSeeder
+php artisan make:seeder ReservationsTableSeeder
 シーダーは下記コマンドでデータを挿入
 docker compose exec app php artisan migrate:fresh --seed
 
@@ -99,3 +100,7 @@ npm install
 cd ../
 docker compose -f docker-compose.dev.yml down
 docker compose -f docker-compose.dev.yml up -d --build frontend-dev
+
+##メール送信
+ローカルはLaravelのMailhogを採用、本番はAWSを採用の予定
+
