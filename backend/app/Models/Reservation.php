@@ -9,4 +9,8 @@ class Reservation extends Model
     protected $fillable = [
         'quantity',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

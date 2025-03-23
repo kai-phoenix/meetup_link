@@ -16,4 +16,9 @@ class Event extends Model
         'description',
         'image_path'
     ];
+    // リレーション
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

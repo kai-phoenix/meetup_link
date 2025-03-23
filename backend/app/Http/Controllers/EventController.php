@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
@@ -16,7 +17,24 @@ class EventController extends Controller
     {
         // $event=Event::create();
         $events = Event::all();
-        return response()->json(['event' => $events],201);
+        $now_reservations = Reservation::all();
+        // 取り出した予約情報からイベントidごとの人数を配列にする
+        $event_id_lists = [];
+        $reservation_count = [];
+        foreach($now_reservations as $now_reservation) {
+            if(empty($now_reservation->quantity)) {
+                $now_reservation->quantity = 0;
+            }
+            if(!in_array($now_reservation->event_id,$event_id_lists)) {
+                array_push($event_id_lists,$now_reservation->event_id);
+                $reservation_count[$now_reservation->event_id] = $now_reservation->quantity;
+            }
+            else {
+                $reservation_count[$now_reservation->event_id] += $now_reservation->quantity;
+            }
+        }
+        
+        return response()->json(['event' => $events,'reservation'=>$reservation_count],201);
     }
 
     /**
@@ -73,8 +91,10 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        $event=Event::findOrFail($id);
-        return response()->json(['event'=>$event]);
+        $event=Event::with('reservations.user')->findOrFail($id);
+        return response()->json([
+            'event'=>$event,
+        ]);
     }
 
     /**
@@ -130,8 +150,13 @@ class EventController extends Controller
     {
         // イベント、ユーザー情報取得
         $event=Event::findOrFail($id);
-        $user=$request->user();
+        $user=Auth::user();
 
+        // バリデーション
+        $validated = $request->validate([
+            'party' => 'required|integer',
+        ]);
+        
         //定員チェック
         $currentCount=0;
         $reservations=Reservation::where('event_id',$event->id)->get();
@@ -139,18 +164,22 @@ class EventController extends Controller
         {
             $currentCount+=$reservation->quantity;
         }
+
+        $currentCount+=$request->party;
         if($currentCount>$event->capacity)
         {
             return response()->json([
                 "message"=>"上限人数を超えたため新規予約は失敗しました。"
             ],400);
         }
-        // 予約レコードを作成
+
+        // 予約レコードを作成(外部キーを設定)
         $new_reservation = new Reservation();
-        $new_reservation->user_id=$user->id;
-        $new_reservation->event_id=$event->id;
-        $new_reservation->party=$request->input('party');
-        // $event = Reservation::create($validated);
+        $new_reservation->user_id =$user->id;
+        $new_reservation->event_id =$event->id;
+        $new_reservation->quantity =$validated['party'];
+        $new_reservation->status = 0;
+        $new_reservation->save();
 
         return response()->json([
             "message"=>"新規予約できました！",
@@ -160,15 +189,19 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function cancel(Request $request,string $id)
+    public function cancel(Request $request,$event_id)
     {
-        //キャンセル対象イベント
-        $event=Event::findOrFail($id);
+        // ユーザー情報取得
         $user=$request->user();
-
-        $reservation=Reservation::where('user_id',$user->id)->where('event_id',$event->id);
-        // イベント削除
+        // リクエストボディから予約IDを取得
+        $reservation_id= $request->input('reservation_id');
+        // Log::info('Reservationid:'.$reservation_id);
+        // Log::info('Userid:'.$user->id);
+        // Log::info('Eventid:'.$event_id);
+        //キャンセル対象の予約情報を取得
+        $reservation = Reservation::where('id',$reservation_id)->where('user_id',$user->id)->where('event_id',$event_id)->firstOrFail();
         $reservation->delete();
+
         return response()->json([
             "message"=>"予約を取り消しました。"
         ],200);

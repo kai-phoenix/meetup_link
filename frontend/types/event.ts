@@ -1,3 +1,4 @@
+import { Reservation } from "./reservation";
 export interface Event {
     id: number,
     user_id:number,
@@ -7,4 +8,5 @@ export interface Event {
     status: number,
     description:string,
     image_path:string,
+    reservations:Reservation[]
 }
