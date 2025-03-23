@@ -30,6 +30,10 @@ Route::middleware(('auth:sanctum'))->group(function () {
     Route::delete('/events/{id}/reserve', [EventController::class,'cancel']);
     // プロフィール表示
     Route::get('/profile', [ProfileController::class,'show']);
+    // プロフィール編集
+    Route::put('/profile', [ProfileController::class,'update']);
+    // プロフィール削除
+    Route::delete('/profile',[ProfileController::class,'destroy']);
     // ログアウト
     Route::post('/logout', [AuthController::class,'logout']);
 });

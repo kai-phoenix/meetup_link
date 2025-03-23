@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -49,16 +51,29 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $user = $request->user();
+        // バリデーション
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+        // 初期値を設定
+        $validated['authority'] = 0;
+        // ユーザー情報を更新
+        $user->update($validated);
+        return response()->json(['user'=>$user],201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $user = $request->user();
+        Log::info('User ID: ' . $user->id);
+        $user->delete();
+        return response()->json(['message'=>'ユーザーを削除しました'],200);
     }
 }

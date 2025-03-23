@@ -4,13 +4,15 @@ import React from 'react'
 type RemoveButtonProps = {
     removePath:string;
     name:string;
-    onRemove:()=> void;
+    onRemove?:()=> void;
 }
 // 現在のページから任意の削除ページへ遷移する
 export function RemoveButton({name,onRemove}: RemoveButtonProps) {
     const handleRemove = async()=> {
         if(confirm('本当に削除しますか?')) {
-            await onRemove()
+            if (onRemove) {
+                onRemove();
+            }
         }
     }
     return (
