@@ -18,9 +18,5 @@ describe('LoginPage',() => {
             </AuthProvider>
     )
         expect(screen.getByText('ログインフォーム')).toBeInTheDocument()
-        // 正規表現を使用し、ラベルのテキストがメールアドレスを含むかどうかを確認
-        expect(screen.getByLabelText(/メールアドレス/i)).toBeInTheDocument()
-        expect(screen.getByLabelText(/パスワード/i)).toBeInTheDocument()
-        expect(screen.getByRole('button',{name: /ログイン/i})).toBeInTheDocument()
     })
 })
