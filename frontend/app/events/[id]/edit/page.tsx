@@ -106,19 +106,19 @@ export default function EditEventPage() {
             <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>開催日:</label>
-                    <input type='date' value={eventDate} onChange={e=>setEventDate(e.target.value)}/>
+                    <input type='date' value={eventDate} onChange={e=>setEventDate(e.target.value)} className='border-2 border-gray-500'/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>定員:</label>
-                    <input type='number' value={capacity} onChange={e=>setCapacity(e.target.value)}/>
+                    <input type='number' value={capacity} onChange={e=>setCapacity(e.target.value)} className='border-2 border-gray-500'/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>料金:</label>
-                    <input type='number' value={money} onChange={e=>setMoney(e.target.value)}/>
+                    <input type='number' value={money} onChange={e=>setMoney(e.target.value)} className='border-2 border-gray-500'/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>詳細:</label>
-                    <input type='text' value={description} onChange={e=>setDescription(e.target.value)}/>
+                    <input type='text' value={description} onChange={e=>setDescription(e.target.value)} className='border-2 border-gray-500'/>
                 </div>
                 {/* <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>状態:</label>
