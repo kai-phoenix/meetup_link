@@ -22,6 +22,7 @@ class AuthController extends Controller
             'name' => $validated_user['name'],
             'email' => $validated_user['email'],
             'password' => bcrypt($validated_user['password']), #暗号化
+            'authority'=> 0,
         ]);
         // ログイン後にトークン発行
         $user_token = $user->createToken('access_token')->plainTextToken;
@@ -35,7 +36,7 @@ class AuthController extends Controller
     {
         // バリデーション(直書き)
         $validated_credentials = $request->validate([
-            'email' => 'required|email',
+            'name' => 'required',
             'password' => 'required',
         ]);
         // ログイン状態を確認

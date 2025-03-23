@@ -67,8 +67,40 @@ php artisan make:model Event --migration
 php artisan make:model Category --migration
 php artisan make:model Reservation --migration
 
+以下コマンドでUsers,Eventsのシーダーを作成
+php artisan make:seeder UsersTableSeeder
+php artisan make:seeder EventsTableSeeder
+php artisan make:seeder ReservationsTableSeeder
+シーダーは下記コマンドでデータを挿入
+docker compose exec app php artisan migrate:fresh --seed
+
+laravelにnextjsからFormDataをPUTメソッドで送信するとうまく受け取れない場合がある
+
 ## API設計
 
 下記記事を参考にした
 
 https://zenn.dev/arsaga/articles/4a72774b1c93d2
+
+## デザイン
+下記URLの実装例から拡張して作成
+https://ui8.net/royalz-store/products/ella-mobile-wallet-app-ui-kit?rel=timer
+
+## 画像
+下記URLからサンプル画像を追加
+https://www.photo-ac.com/
+下記コマンドで/api/storage/app/publicへシンボリックリンクを作成
+docker compose exec app php artisan storage:link
+下記コマンドでライブラリを入れた際は最適化を実施
+cd frontend
+rm -rf .next node_modules package-lock.json
+(Windows:Remove-Item -Recurse -Force node_modules, package-lock.json)
+npm install
+
+cd ../
+docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.dev.yml up -d --build frontend-dev
+
+##メール送信
+ローカルはLaravelのMailhogを採用、本番はAWSを採用の予定
+

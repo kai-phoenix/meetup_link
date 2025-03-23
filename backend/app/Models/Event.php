@@ -6,5 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    //
+    protected $fillable=[
+        'user_id',
+        'category_id',
+        'event_date',
+        'capacity',
+        'money',
+        'status',
+        'description',
+        'image_path'
+    ];
+    // リレーション
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

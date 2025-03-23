@@ -1,14 +1,16 @@
 'use client'
-import {useState} from 'react'
-// import {useRouter} from 'next/navigation'
+import React, {useState} from 'react'
+import { useAuth } from '../components/AuthContext';
+import {useRouter} from 'next/navigation'
 
 export default function LoginPage() {
     // フォームの入力を管理するReactのStateを定義
-    const[email,setEmail] = useState('')
+    const[name,setName] = useState('')
     const[password,setPassword] = useState('')
+    const { login } = useAuth();
 
     // 画面遷移や再描画に使用する
-    // const router = useRouter()
+    const router = useRouter()
 
     // フォーム送信時の処理
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +24,7 @@ export default function LoginPage() {
                     'Accept':'application/json',
                 },
                 body:JSON.stringify({
-                    email:email,
+                    name:name,
                     password: password,
                 }),
             })
@@ -34,11 +36,20 @@ export default function LoginPage() {
             }
             // 成功ならトークンやユーザー情報を受け取る
             const data = await res.json()
-            alert('ログイン成功:'+data.user?.email)
-            // トークンをローカルストレージへ保存
+            const {token} = data
+            // console.log(data)
+            // ログイン失敗時の処理
+            if(data.message === "Invalid credentials"){
+                alert('メールアドレスかパスワードが間違っております。') 
+                return
+            }
+            alert(data.user?.name+'さん:ログインに成功しました。')
+            // ユーザー情報,トークンをローカルストレージへ保存
             localStorage.setItem('token',data.token)
+            localStorage.setItem('user',JSON.stringify(data.user))
+            login(token)
             // 次ページへ遷移
-            // router.push('/posts')
+            router.push('/events')
         }
         catch(error){
             alert('エラー発生'+error)
@@ -48,17 +59,22 @@ export default function LoginPage() {
         <div className="w-6/12 mx-auto max-w-lg min-w-96">
             <h1 className="my-5 text-2xl font-bold">ログインフォーム</h1>
             <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-black">
-                <div className='mb-2.5 w-11/12 flex justify-between flex-rap mx-auto'>
-                    <label htmlFor="email">Email:</label>
-                    <input id="email" type="email" name="email" value={email} onChange={e => setEmail(e.target.value)} className='border border-black w-9/12'/>
+                <div className='mb-2.5 w-11/12 mx-auto'>
+                    <label htmlFor="name">ユーザ名</label><br/>
+                    <input id="name" type="name" name="name" value={name} onChange={e => setName(e.target.value)} className='border border-black w-full'/>
                 </div>
-                <div className='mb-2.5 w-11/12 flex justify-between flex-rap mx-auto'>
-                    <label htmlFor="password">Password:</label>
-                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} className='border border-black w-9/12'/>
+                <div className='mb-2.5 w-11/12 mx-auto'>
+                    <label htmlFor="password">パスワード</label><br/>
+                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} className='border border-black w-full'/>
                 </div>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl text-sm w-4/12 mx-auto">
+                <div className='mt-2 mb-2.5 w-11/12 mx-auto'>
+                    <button type="submit" className="bg-blue-500 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded-3xl text-sm w-20 mx-auto">
                     ログイン
-                </button>
+                    </button>
+                </div>
+                <div className='mb-2.5 w-11/12 mx-auto'>
+                    <a href="/register" className="text-center text-blue-500 hover:underline hover:text-gray-700 text-sm font-bold py-2">新規登録はこちら</a>
+                </div>
             </form>
         </div>
     )
