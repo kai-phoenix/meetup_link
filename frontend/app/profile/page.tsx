@@ -1,6 +1,6 @@
 'use client'
-import { useState,useEffect, use } from 'react'
-import { useRouter,useParams } from 'next/navigation'
+import { useState,useEffect} from 'react'
+import { useRouter } from 'next/navigation'
 import { UpdateButton } from '../components/UpdateButton'
 import { ReturnButton } from '../components/ReturnButton'
 import { RemoveButton } from '../components/RemoveButton'
@@ -9,18 +9,17 @@ import { User } from '@/types/user'
 export default function ProfilePage() {
     const [user,setUser]= useState<User|null>(null)
     const router = useRouter()
-    const params = useParams()
     const [name,setName] = useState('')
     const [email,setEmail] = useState('')
     const token = localStorage.getItem('token')
 
-    // トークンがなければログイン画面(/login)へリダイレクト
-    if(!token) {
-        router.push('login')
-        return
-    }
     // ユーザー情報の取得
     useEffect(()=> {
+        // トークンがなければログイン画面(/login)へリダイレクト
+        if(!token) {
+            router.push('login')
+            return
+        }
         // Bearertokenの付与
         fetch('http://localhost:8000/api/profile',{
             headers: {
@@ -47,7 +46,7 @@ export default function ProfilePage() {
         .catch(()=>{
             router.push('/login')
         })
-    },[router])
+    },[router,token])
     if(!user)
     {
         return <div>ロード中・・・</div>
@@ -69,7 +68,6 @@ export default function ProfilePage() {
             body: formData
         })
         if(res.ok) {
-            const data = await res.json()
             alert('ユーザー情報を更新しました。')
             router.push('/login')
         }

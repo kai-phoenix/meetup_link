@@ -20,17 +20,17 @@ export default function EditEventPage() {
     const [imagePath,setImagePath] = useState('')
     // const [status,setStatus] = useState('')
     const token = localStorage.getItem('token')
-    // トークンがなければログイン画面へリダイレクト
-    if(!token) {
-        router.push('/login')
-        return
-    }
     const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files){
             setFile(e.target.files[0]);
         }
     }
     useEffect(()=>{
+        // トークンがなければログイン画面へリダイレクト
+        if(!token) {
+            router.push('/login')
+            return
+        }
         // Bearerトークンを付与し、イベント一覧を取得
         fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
             headers: {
@@ -58,7 +58,7 @@ export default function EditEventPage() {
                 // setStatus(data.event.status)
             }
         })
-    },[router,params.id])
+    },[router,params.id,token])
 
     const handleSubmit = async(e:React.FormEvent) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}')

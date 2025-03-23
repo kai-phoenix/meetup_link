@@ -1,10 +1,9 @@
 'use client'
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LogoutButton } from "./components/LogoutButton";
 import { ProfileImageLink } from "./components/ProfileImageLink";
-import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from "./components/AuthContext";
 
 const geistSans = Geist({
@@ -37,14 +36,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // ログイン状態を保持するstate
-  // 初期値をundefinedにして、判定完了後に表示を確定
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined);;
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); 
-  }, []);
   return (
     <html lang="en">
       <body
