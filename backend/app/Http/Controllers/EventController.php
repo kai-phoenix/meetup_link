@@ -7,6 +7,8 @@ use App\Models\Event;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventReservationSuccessMail;
 
 class EventController extends Controller
 {
@@ -33,7 +35,6 @@ class EventController extends Controller
                 $reservation_count[$now_reservation->event_id] += $now_reservation->quantity;
             }
         }
-        
         return response()->json(['event' => $events,'reservation'=>$reservation_count],201);
     }
 
@@ -156,7 +157,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'party' => 'required|integer',
         ]);
-        
+
         //定員チェック
         $currentCount=0;
         $reservations=Reservation::where('event_id',$event->id)->get();
@@ -180,6 +181,9 @@ class EventController extends Controller
         $new_reservation->quantity =$validated['party'];
         $new_reservation->status = 0;
         $new_reservation->save();
+
+        // 予約完了時のメール送信
+        Mail::to($user->email)->send(new EventReservationSuccessMail($event,$user,$new_reservation));
 
         return response()->json([
             "message"=>"新規予約できました！",
