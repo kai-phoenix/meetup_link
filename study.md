@@ -102,5 +102,9 @@ docker compose -f docker-compose.dev.yml down
 docker compose -f docker-compose.dev.yml up -d --build frontend-dev
 
 ##メール送信
-ローカルはLaravelのMailhogを採用、本番はAWSを採用の予定
+ローカルはLaravelのMailhogを採用、本番はAWSSESを採用の予定
+以下コマンドでMailableを導入かつメールテンプレートにmarkdownを採用
+イベント予約成功時に送付する。
+php artisan make:mail EventReservationSuccessMail --markdown=emails.reservation.success
 
+Dockerにはmailhogを導入し、メールの内容を確認できるようにした

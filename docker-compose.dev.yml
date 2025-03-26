@@ -69,5 +69,13 @@ services:
     command: npm run dev
     depends_on:
       - app
+  mailhog:
+    container_name: meetup_link_mailhog
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp
+      - 8025:8025 # web UIポート
+    networks:
+      - default
 volumes:
   db_meetup_volume:
