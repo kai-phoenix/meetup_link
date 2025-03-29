@@ -11,10 +11,12 @@ export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
     const [reservation, setReservation] = useState<{ [key: number]: number }>({})
     const router = useRouter()
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    const [user, setUser] = useState<{id?:number,name?:string,email?:string}>({})
 
     useEffect(()=>{
         const token = localStorage.getItem('token')
+        const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+        setUser(storedUser)
         // トークンがなければログイン画面へリダイレクト
         if(!token) {
             router.push('/login')
