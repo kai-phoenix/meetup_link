@@ -101,10 +101,18 @@ cd ../
 docker compose -f docker-compose.dev.yml down
 docker compose -f docker-compose.dev.yml up -d --build frontend-dev
 
-##メール送信
+##　メール送信
 ローカルはLaravelのMailhogを採用、本番はAWSSESを採用の予定
 以下コマンドでMailableを導入かつメールテンプレートにmarkdownを採用
 イベント予約成功時に送付する。
 php artisan make:mail EventReservationSuccessMail --markdown=emails.reservation.success
 
 Dockerにはmailhogを導入し、メールの内容を確認できるようにした
+
+##　デプロイ
+AWS環境へDockerイメージをデプロイする
+
+Laravelイメージ(appコンテナ)をビルド
+docker build -t meetup-link-backend:latest -f ./docker/php/Dockerfile .
+プロジェクトルートで以下を実行し、作成したLaravelイメージにECRのタグをつける
+<aws_account_id>.dkr.ecr.<region>.amazonaws.com/meetup-link-backend
