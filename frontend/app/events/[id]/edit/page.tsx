@@ -32,7 +32,7 @@ export default function EditEventPage() {
             return
         }
         // Bearerトークンを付与し、イベント一覧を取得
-        fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}/edit`,{
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -79,7 +79,7 @@ export default function EditEventPage() {
         else {
             formData.append('existing_image_path',imagePath)
         }
-        const res = await fetch(`http://localhost:8000/api/events/${params.id}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}`,{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

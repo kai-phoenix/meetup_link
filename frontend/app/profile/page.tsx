@@ -8,11 +8,10 @@ import { User } from '@/types/user'
 
 export default function ProfilePage() {
     const [user,setUser]= useState<User|null>(null)
-    const [token,setToken] = useState<string|null>(null)
     const router = useRouter()
     const [name,setName] = useState('')
     const [email,setEmail] = useState('')
-    // const token = localStorage.getItem('token')
+    const [token,setToken] = useState<string|null>(null)
 
     // ユーザー情報の取得
     useEffect(()=> {
@@ -24,7 +23,7 @@ export default function ProfilePage() {
         }
         setToken(storedToken)
         // Bearertokenの付与
-        fetch('http://localhost:8000/api/profile',{
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile`,{
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${storedToken}`
@@ -33,7 +32,7 @@ export default function ProfilePage() {
         .then(res => {
             if (!res.ok) {
                 // 401などの場合ログイン画面へ
-                //router.push('/login')
+                router.push('/login')
                 return null
             }
             return res.json();
@@ -49,7 +48,7 @@ export default function ProfilePage() {
         .catch(()=>{
             router.push('/login')
         })
-    },[router])
+    },[router,token])
     if(!user)
     {
         return <div>ロード中・・・</div>
@@ -62,7 +61,7 @@ export default function ProfilePage() {
         formData.append('email',email)
         formData.append('_method','PUT')
 
-        const res = await fetch('http://localhost:8000/api/profile',{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile`,{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -82,7 +81,7 @@ export default function ProfilePage() {
     const handleDelete = async() => {
         const formData = new FormData()
         formData.append('_method','DELETE')
-        const res = await fetch('http://localhost:8000/api/profile',{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile`,{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

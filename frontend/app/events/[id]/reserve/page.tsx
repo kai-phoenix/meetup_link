@@ -17,7 +17,7 @@ export default function ReserveEventPage() {
             router.push('/login')
             return
         }
-        fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}/edit`,{
             headers: {
                 'Accept':'application/json',
                 'Authorization': `Bearer ${token}`
@@ -50,7 +50,7 @@ export default function ReserveEventPage() {
             alert('予約人数を入力してください')
             return
         }
-        const res =await fetch(`http://localhost:8000/api/events/${params.id}/reserve`,{
+        const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}/reserve`,{
             method: 'POST',
             headers: {
                 'Content-Type':'application/json',
@@ -81,7 +81,7 @@ export default function ReserveEventPage() {
             return
         }
         console.log(eventId,reservationId)
-        const res = await fetch(`http://localhost:8000/api/events/${eventId}/reserve`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}/reserve`,{
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
