@@ -10,6 +10,8 @@ RUN apt-get update && \
 COPY frontend/package*.json ./
 #依存関係をインストール
 RUN npm install
+# 確実に本番環境変数を明示的に指定
+ENV NEXT_PUBLIC_API_URL=https://meetup-link.com
 #残りのソースをコピー
 COPY frontend/ .
 #ビルド

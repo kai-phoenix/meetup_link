@@ -10,3 +10,25 @@ RUN apt-get -y update \
     && docker-php-ext-install pdo pdo_mysql \
     && curl https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
+# 作業ディレクトリを設定
+WORKDIR /var/www/html
+# Laravelのプロジェクトをコンテナにコピーした後に以下を追加
+COPY backend/ /var/www/html
+# bootstrap/cacheを作成
+RUN mkdir -p storage/logs && \
+    touch storage/logs/laravel.log && \
+    ln -sf /dev/stdout storage/logs/laravel.log
+# キャッシュディレクトリ設定
+RUN mkdir -p bootstrap/cache && \
+    chmod -R 777 bootstrap/cache
+
+RUN php -d variables_order=EGPCS artisan config:clear && \
+CACHE_STORE=array php artisan cache:clear && \
+php artisan route:clear && \
+php artisan view:clear
+# Expose FPM Port
+EXPOSE 9000
+
+# Laravel DB接続＆マイグレーション確認
+# CMD ["bash", "-c", "cd /var/www/html && php artisan migrate:status && php-fpm"]
+CMD ["php-fpm"]
