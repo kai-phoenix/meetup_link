@@ -1,0 +1,101 @@
+<mxfile host="65bd71144e">
+    <diagram id="NfKgx-cfLiW3s2wZpvFR" name="AWSアーキテクチャ構成">
+        <mxGraphModel dx="804" dy="259" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="19" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="4" target="17">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="HTTP80で&lt;br&gt;proxyへ通信" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=none;" vertex="1" connectable="0" parent="19">
+                    <mxGeometry x="-0.0291" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="パブリックALBでHTTPS:443,HTTP:80を許可" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="HTTPS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="5">
+                    <mxGeometry x="-0.1375" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="ユーザー/ブラウザ" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="edgeStyle=none;exitX=0.5;exitY=0;exitDx=0;exitDy=0;dashed=1;dashPattern=8 8;html=1;" edge="1" parent="1" source="14" target="3">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="コストアラート" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="15">
+                    <mxGeometry x="0.1285" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="AWS Budgets(予算アラート)で$10 / $20 / $50をアラートする&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%2F%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%22%20style%3D%22rounded%3D1%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22120%22%20height%3D%2260%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%2F%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%22%20style%3D%22rounded%3D1%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22120%22%20height%3D%2260%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="280" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="TCPの3306ポート&lt;br&gt;のみで通信" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="17" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="必要な時のみだけ制御" style="edgeStyle=none;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="17" target="23">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="AWSAPIの&lt;br&gt;443エンドポイントを作成" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="17" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.4;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;fontColor=none;" edge="1" parent="1" source="17" target="28">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="app+ front + proxy構成の固定イメージでECS Fargateをlatestタグにしない&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#D5E8D4;strokeColor=#6C8EBF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="440" y="100" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="プライベートサブネットのみにRDSを配置する&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#D5E8D4;strokeColor=#6C8EBF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="720" y="80" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="NAT Gateway optional / controlled使うなら443ポートのみに限定する" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="720" y="240" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Target Architecture / 再公開時の安全寄り構成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="30" width="560" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=none;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="26" target="34">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="イメージを&lt;br&gt;プルする" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=none;" vertex="1" connectable="0" parent="36">
+                    <mxGeometry x="-0.0748" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="認証を取得" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="26" target="35">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="ECR APIのVPCエンドポイント/ECR DKR Logs / Secrets/S3の構成で作成&lt;br&gt;※理想形&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#D5E8D4;strokeColor=#6C8EBF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="320" y="270" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="ログ送信" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=none;" edge="1" parent="1" source="28" target="29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="NAT Gateway optional / controlled使うなら443ポートのみに限定する" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="440" y="400" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="VPCフローログのトラフィックタイプをAll,StatusをACTIVEに設定する" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="720" y="400" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="ECSのセキュリティグループのルールをインターネットの接続全許可(0.0.0.0/0)ではなくTCPプロトコルの3306ポートのみの接続を許可するように変更する" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="440" y="520" width="360" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="ECRは固定タグのみ許可&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#D5E8D4;strokeColor=#6C8EBF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="80" y="400" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="SecretManagerで認証をローテーションする" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#D5E8D4;strokeColor=#6C8EBF;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="80" y="520" width="160" height="100" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
