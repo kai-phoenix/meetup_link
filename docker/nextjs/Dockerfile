@@ -8,8 +8,8 @@ RUN apt-get update && \
     apt-get install -y libc6-dev build-essential gcc autoconf automake zlib1g-dev libpng-dev libvips-dev
 # package.json,package-lock.jsonを先にコピー
 COPY frontend/package*.json ./
-#依存関係をインストール
-RUN npm install
+#package-lock.json と依存関係をインストール
+RUN npm ci
 # 確実に本番環境変数を明示的に指定
 ENV NEXT_PUBLIC_API_URL=https://meetup-link.com
 #残りのソースをコピー
