@@ -111,7 +111,7 @@ export default function ReserveEventPage() {
     }
 
     return (
-        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+        <div className="mx-auto w-full max-w-lg px-2">
             <h1 className="text-2xl mb-2 font-semibold">イベント予約</h1>
             <div className="flex justify-center flex-col text-xl space-y-2 mt-1 mb-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
                 <div className="font-semibold text-gray-700 mb-8">

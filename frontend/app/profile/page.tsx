@@ -99,7 +99,7 @@ export default function ProfilePage() {
         }
     }   
     return (
-        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+        <div className="mx-auto w-full max-w-lg px-2">
             <h1 className="my-5 text-2xl font-bold">プロフィール</h1>
             <div className='my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500'>
                 <div className='my-2 flex justify-end'>

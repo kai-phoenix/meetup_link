@@ -17,6 +17,7 @@ export function LogoutButton() {
             })
         }
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
         logout()
         router.push('/login')
     }

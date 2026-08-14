@@ -56,16 +56,16 @@ export default function LoginPage() {
         }
     }
     return (
-        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+        <div className="mx-auto w-full max-w-lg px-2">
             <h1 className="my-5 text-2xl font-bold">ログインフォーム</h1>
             <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-black">
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label htmlFor="name">ユーザ名</label><br/>
-                    <input id="name" type="name" name="name" value={name} onChange={e => setName(e.target.value)} className='border border-black w-full'/>
+                    <input id="name" type="text" name="name" value={name} onChange={e => setName(e.target.value)} autoComplete="username" required className='w-full rounded border border-gray-400 px-3 py-2'/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label htmlFor="password">パスワード</label><br/>
-                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} className='border border-black w-full'/>
+                    <input id="password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required className='w-full rounded border border-gray-400 px-3 py-2'/>
                 </div>
                 <div className='mt-2 mb-2.5 w-11/12 mx-auto'>
                     <button type="submit" className="bg-blue-500 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded-3xl text-sm w-20 mx-auto">

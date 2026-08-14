@@ -98,9 +98,9 @@ export default function EventPage() {
                                         <RemoveButton removePath = {`events/${event.id}`} name="削除" onRemove={()=>handleRemoveEvent(event.id)}/>
                                     </div>
                                 )}
-                                <div className='flex align-center'>
+                                <div className='flex flex-col items-center gap-4 lg:flex-row lg:items-start'>
                                     <div className = 'relative w-full h-auto aspect-square min-w-72 max-w-lg mb-auto'>
-                                        <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
+                                        <Image src ={`/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
                                     </div>
                                     <div className='flex flex-col justify-between'>
                                         <div className='min-w-72 text-xl space-y-2 mr-4 pr-4 rounded-lg'>
