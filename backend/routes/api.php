@@ -11,6 +11,9 @@ Route::post('/register', [AuthController::class,'register']);
 // ログイン
 Route::post('/login', [AuthController::class,'login']);
 // Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok'], 200);
+});
 Route::middleware(('auth:sanctum'))->group(function () {
     // イベント表示
     Route::get('/events', [EventController::class,'index']);

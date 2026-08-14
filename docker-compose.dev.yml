@@ -3,7 +3,7 @@ services:
     container_name: meetup_link_proxy
     build:
       context: .
-      dockerfile: ./docker/nginx/Dockerfile
+      dockerfile: ./docker/nginx/Dockerfile.dev
     ports:
       - 8000:80
     volumes:
@@ -16,7 +16,7 @@ services:
     container_name: meetup_link_app
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile
+      dockerfile: ./docker/php/Dockerfile.dev
     volumes:
         - ./docker/php/php.ini:/usr/local/etc/php/php.ini
         - ./backend:/var/www/html
@@ -61,11 +61,11 @@ services:
     #   - type: bind
     #     source: ./frontend
     #     target: /app
-    environment:
-    - NODE_ENV=development
-    - WATCHPACK_POLLING=true
-    - NEXT_PUBLIC_API_URL=http://localhost:8000
-    - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
+    # environment:
+    # - NODE_ENV=development
+    # - WATCHPACK_POLLING=true
+    # - NEXT_PUBLIC_API_URL=http://localhost:8000
+    # - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
     command: npm run dev
     depends_on:
       - app

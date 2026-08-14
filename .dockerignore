@@ -1,2 +1,11 @@
-node_modules
-.next
+# どの階層の node_modules / .next も送らない
+**/node_modules
+**/.next
+
+# git 履歴やOSのゴミファイルも送らない
+.git
+**/.DS_Store
+
+# envファイルをイメージに入れない
+**/.env
+**.env.*

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -21,16 +21,18 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated_user['name'],
             'email' => $validated_user['email'],
-            'password' => bcrypt($validated_user['password']), #暗号化
-            'authority'=> 0,
+            'password' => bcrypt($validated_user['password']), // 暗号化
+            'authority' => 0,
         ]);
         // ログイン後にトークン発行
         $user_token = $user->createToken('access_token')->plainTextToken;
+
         return response()->json([
             'user' => $user,
             'token' => $user_token,
         ], 201);
     }
+
     // ログイン処理
     public function login(Request $request)
     {
@@ -40,27 +42,30 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         // ログイン状態を確認
-        if (!Auth::attempt($validated_credentials)) {
-            return response()->json(["message" => "Invalid credentials"]);
+        if (! Auth::attempt($validated_credentials)) {
+            return response()->json(['message' => 'ユーザー名またはパスワードが正しくありません。'], 401);
         }
         // ログインできているとユーザー情報を取得(phpintelliphenseがエラーを吐くため、下で$userが定義したUserモデルであることを宣言)
         // /** @var \App\Models\MyUserModel $user **/
         // $user=Auth::user();
         // トークン発行
         $user_token = $request->user()->createToken('access_token')->plainTextToken;
+
         // $token = $user->createToken('access_token')->plainTextToken;
         return response()->json([
             'user' => $request->user(),
             'token' => $user_token,
         ], 200);
     }
+
     // ログアウト処理
     public function logout(Request $request)
     {
         // トークン削除
         $request->user()->currentAccessToken()->delete();
+
         return response()->json([
-            'message' => 'Logout!'
+            'message' => 'Logout!',
         ], 200);
     }
 }

@@ -8,7 +8,7 @@ export function LogoutButton() {
     const handleLogout = async() =>{
         const token = localStorage.getItem('token')
         if(token) {
-            await fetch('http://localhost:8000/api/logout',{
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`,{
                 method:'POST',
                 headers: {
                     'Accept':'application/json',
@@ -17,6 +17,7 @@ export function LogoutButton() {
             })
         }
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
         logout()
         router.push('/login')
     }

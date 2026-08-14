@@ -6,22 +6,26 @@ import Image from 'next/image'
 import { EditButton } from '../components/EditButton'
 import { RemoveButton } from '../components/RemoveButton'
 import { ReservationButton } from '../components/ReservationButton'
+import { User } from '@/types/user'
 
 export default function EventPage() {
     const [event, setEvent] = useState<Event[]|null>(null)
     const [reservation, setReservation] = useState<{ [key: number]: number }>({})
     const router = useRouter()
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    // const user = JSON.parse(localStorage.getItem('user') || '{}')
+    const [user,setUser] = useState<User| null>(null)
 
     useEffect(()=>{
         const token = localStorage.getItem('token')
+        const storedUser = localStorage.getItem('user')
         // トークンがなければログイン画面へリダイレクト
         if(!token) {
             router.push('/login')
             return
         }
+        setUser(JSON.parse(storedUser || '{}'))
         // Bearerトークンを付与し、イベント一覧を取得
-        fetch('http://localhost:8000/api/events',{
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`,{
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -88,15 +92,15 @@ export default function EventPage() {
                     return (
                         <li key={event.id}>
                             <div className='border-2 border-cyan-200 mb-8 p-4 min-w-80 shadow-md shadow-cyan-500'>
-                                {user.id === event.user_id && (
+                                {user?.id === event.user_id && (
                                     <div className='my-2 flex justify-end'>
                                         <EditButton editPath={`/events/${event.id}/edit`} name="編集"/>
                                         <RemoveButton removePath = {`events/${event.id}`} name="削除" onRemove={()=>handleRemoveEvent(event.id)}/>
                                     </div>
                                 )}
-                                <div className='flex align-center'>
+                                <div className='flex flex-col items-center gap-4 lg:flex-row lg:items-start'>
                                     <div className = 'relative w-full h-auto aspect-square min-w-72 max-w-lg mb-auto'>
-                                        <Image src ={`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
+                                        <Image src ={`/storage/event_images/${event.image_path}`} alt="Event image" fill className='object-cover pr-4'/>
                                     </div>
                                     <div className='flex flex-col justify-between'>
                                         <div className='min-w-72 text-xl space-y-2 mr-4 pr-4 rounded-lg'>

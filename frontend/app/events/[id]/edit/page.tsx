@@ -32,7 +32,7 @@ export default function EditEventPage() {
             return
         }
         // Bearerトークンを付与し、イベント一覧を取得
-        fetch(`http://localhost:8000/api/events/${params.id}/edit`,{
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}/edit`,{
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -61,11 +61,9 @@ export default function EditEventPage() {
     },[router,params.id,token])
 
     const handleSubmit = async(e:React.FormEvent) => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
         e.preventDefault()
         console.log(eventDate)
         const formData =new FormData()
-        formData.append('user_id',user.id.toString())
         formData.append('event_date',eventDate);
         formData.append('capacity',capacity);
         formData.append('money',money);
@@ -79,7 +77,7 @@ export default function EditEventPage() {
         else {
             formData.append('existing_image_path',imagePath)
         }
-        const res = await fetch(`http://localhost:8000/api/events/${params.id}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${params.id}`,{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -101,7 +99,7 @@ export default function EditEventPage() {
         return <div>ロード中・・・</div>
     }
     return (
-        <div className="w-6/12 mx-auto max-w-lg min-w-96">
+        <div className="mx-auto w-full max-w-lg px-2">
             <h1 className="my-5 text-2xl font-bold">イベント編集</h1>
             <form onSubmit={handleSubmit} className="flex justify-center flex-col my-10 p-6 border-2 border-cyan-200 shadow-md shadow-cyan-500">
                 <div className='mb-2.5 w-11/12 mx-auto'>
@@ -126,7 +124,7 @@ export default function EditEventPage() {
                 </div> */}
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>現在の画像:</label><br/>
-                    <Image src = {`${process.env.NEXT_PUBLIC_IMAGE_URL}/storage/event_images/${imagePath}`} alt="現在の画像" width = {200} height ={200} className='object-cover pr-4'/>
+                    <Image src = {`/storage/event_images/${imagePath}`} alt="現在の画像" width = {200} height ={200} className='object-cover pr-4'/>
                 </div>
                 <div className='mb-2.5 w-11/12 mx-auto'>
                     <label>ファイル:</label><br/>
