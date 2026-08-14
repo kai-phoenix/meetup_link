@@ -1,43 +1,98 @@
-# アプリ概要
-趣味の集団が集まるオフ会で、簡単に日程調整や予約管理が行えるような
-アプリケーションを作成した。
+# Meetup Link
 
-## 機能一覧
-- ユーザ登録・ログイン機能
-- 予定作成・編集・削除機能
-- 予定の参加・キャンセル機能
-- 参加者人数の確認機能
-- リマインダーメール通知機能
+Meetup Linkは、イベントを作成し、参加予定を管理するための個人開発Webアプリです。ユーザー登録・ログイン後、イベントの作成、編集、削除、参加予約、キャンセルを行えます。
 
-## 使用技術・開発環境
-- フロントエンド
-  - Next.js(React),Typescript,Tailwind CSS
-- バックエンド
-  - Laravel 11(PHP)
-- インフラ・デプロイ(予定)
-  - AWS(EC2,RDS,S3)
+## 主な機能
 
-## インストール・実行方法
-ローカルで試したいときは
+- ユーザー登録・ログイン・ログアウト
+- プロフィール表示・編集
+- イベントの作成・編集・削除
+- イベントへの参加予約・キャンセル
+- 定員と現在の予約人数の表示
+
+## Technology Stack
+
+| 分類 | 技術 |
+| --- | --- |
+| Frontend | Next.js 16 / React 19 / TypeScript / Tailwind CSS |
+| Backend | Laravel 12 / PHP 8.4 / Laravel Sanctum |
+| Database | MySQL |
+| Development | Docker / Docker Compose |
+| AWS | Route 53 / ACM / ALB / ECS Fargate / ECR / RDS / Secrets Manager / CloudWatch Logs |
+
+## Architecture
+
+```text
+Route 53 / ACM
+       ↓
+Application Load Balancer
+       ↓
+ECS Fargate
+├── nginx
+├── Next.js
+└── Laravel (PHP-FPM)
+       ↓
+RDS for MySQL
+```
+
+ALBがHTTPリクエストをHTTPSへリダイレクトし、ECS上のnginxが画面リクエストをNext.jsへ、`/api`と`/storage`へのリクエストをLaravelへ振り分けます。認証APIにはLaravel SanctumのAPIトークンを使用しています。
+
+## Security / Operation
+
+現在のAWS環境では、以下を設定しています。
+
+- ECRのpush時イメージスキャン
+- ECRタグの上書き禁止（immutable image tags）
+- ECSタスク定義で固定イメージタグを使用
+- アプリケーションキーとDBパスワードをSecrets ManagerからECSへ注入
+- ALBでHTTPSを終端し、HTTPアクセスをHTTPSへリダイレクト
+- RDSを外部非公開に設定
+- RDSの自動バックアップを7日間保持
+- RDSの削除保護
+- VPC Flow LogsをCloudWatch Logsへ記録
+- ECSコンテナログをCloudWatch Logsへ記録
+
+記載内容は、リポジトリの設定と稼働中のAWS環境で確認できたものに限定しています。
+
+## Local Development
+
+### 必要なもの
+
+- Docker
+- Docker Compose
+
+ルートディレクトリの`.env`にDocker Compose用のMySQL接続情報を設定し、次のコマンドを実行します。
+
+```bash
 docker compose -f docker-compose.dev.yml up -d --build
+```
+
+主なアクセス先は以下です。
+
+- Frontend: `http://localhost:3000`
+- Laravel/nginx: `http://localhost:8000`
+- MailHog: `http://localhost:8025`
+
+終了時は次のコマンドを実行します。
+
+```bash
 docker compose -f docker-compose.dev.yml down
-でホットリロード付きで動作させられる
+```
 
-### フロントエンド起動
+## Test / Build
+
+```bash
 cd frontend
-npm install npm run dev
+npm ci
+npm run lint
+npm test
+npm run build
 
-### バックエンド起動
-cd backend
-composer install cp .env.example .env php artisan key:generate
-php artisan migrate php artisan serve
+cd ../backend
+composer install
+php artisan test
+```
 
-### クローン
-git clone https://github.com/kai-phoenix/meetup_link.git
+## Background
 
-## 今後の実装予定
-- Googleカレンダー連携
-- ユーザー権限の導入
-
-## デモ画面(作成中)
-![デモ画像]
+Laravelを中心とした業務経験から技術領域を広げるため、Next.js、TypeScript、Docker、AWS ECS Fargateを含む構成を一通り設計・構築・運用する技術検証として開発しています。商用サービスを想定した多機能化ではなく、フロントエンド、API、コンテナ、AWS公開環境までの接続と運用を自分で経験することを目的としています。
