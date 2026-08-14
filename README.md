@@ -10,7 +10,10 @@ Meetup Linkは、イベントを作成し、参加予定を管理するための
 - イベントへの参加予約・キャンセル
 - 定員と現在の予約人数の表示
 
-## Technology Stack
+## デモ
+https://meetup-link.com
+
+## 技術スタック
 
 | 分類 | 技術 |
 | --- | --- |
@@ -93,6 +96,12 @@ composer install
 php artisan test
 ```
 
-## Background
+## 背景
 
 Laravelを中心とした業務経験から技術領域を広げるため、Next.js、TypeScript、Docker、AWS ECS Fargateを含む構成を一通り設計・構築・運用する技術検証として開発しています。商用サービスを想定した多機能化ではなく、フロントエンド、API、コンテナ、AWS公開環境までの接続と運用を自分で経験することを目的としています。
+
+## 制約/未来の改善事項
+
+- アップロード画像をECSタスク内のローカルストレージからS3へ移行
+- GitHub ActionsとOIDCを利用したECSデプロイの自動化
+- CIにフロントエンドのproduction buildとDockerイメージのビルド検証を追加
