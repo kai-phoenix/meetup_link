@@ -2,44 +2,46 @@ name: TEST_CI
 
 on:
   push:
-    branches: ["main","develop"]
+    branches: ["develop"]
   pull_request:
     branches: ["main","develop"]
+
+permissions:
+  contents: read
+
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
     # リポジトリをチェックアウト
     - name: Checkout_Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      with:
+        persist-credentials: false
     # フロントエンドのLintテスト
     - name: Install_Node_Dependencies
-      run: |
-        cd frontend
-        npm install
+      working-directory: frontend
+      run: npm ci
     - name: Lint_Frontend
-      run: |
-        cd frontend
-        npm run lint
+      working-directory: frontend
+      run: npm run lint
     - name: Test_Frontend
-      run: |
-        cd frontend
-        npm run test
+      working-directory: frontend
+      run: npm run test -- --runInBand
     # バックエンドのテスト
     - name: Setup_PHP
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: "8.4"
     - name: Install_Composer_Dependencies
-      run: |
-        cd backend
-        composer install --no-scripts
+      working-directory: backend
+      run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
     - name: Copy env & Generate Key
+      working-directory: backend
       run: |
-        cd backend
         cp .env.example .env
         php artisan key:generate
     - name: Run_Laravel_Test
-      run: |
-        cd ./backend
-        php artisan test
+      working-directory: backend
+      run: php artisan test

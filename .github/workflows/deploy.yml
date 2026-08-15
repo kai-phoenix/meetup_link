@@ -1,0 +1,224 @@
+name: DEPLOY_TO_ECS
+
+on:
+  push:
+    branches: ["main"]
+
+# GITHUB_TOKEN は全ジョブで読み取り専用。OIDC は deploy ジョブだけに付与する。
+permissions:
+  contents: read
+
+# migration と service update が複数コミットで同時実行されないようにする。
+concurrency:
+  group: production-ecs-deploy
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ACCOUNT_ID: "566634942304"
+  ECS_CLUSTER: meetup-link
+  ECS_SERVICE: meetup-link-service
+  TASK_DEF_FILE: aws/task-definition.json
+  PRIVATE_SUBNETS: subnet-0d2f76f7be0d4a528,subnet-0fcb090f558f3c319
+  ECS_SG: sg-03bb5f2dfc5412d9d
+  DEPLOY_ROLE_ARN: arn:aws:iam::566634942304:role/meetup-link-github-deploy
+
+jobs:
+  test:
+    name: Test before deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Test frontend
+        working-directory: frontend
+        run: npm run test -- --runInBand
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: "8.4"
+
+      - name: Install Composer dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      - name: Prepare Laravel test environment
+        working-directory: backend
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Test backend
+        working-directory: backend
+        run: php artisan test
+
+  deploy:
+    name: Deploy to ECS
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
+          role-session-name: GitHubActions-${{ github.run_id }}
+          role-duration-seconds: 3600
+          aws-region: ${{ env.AWS_REGION }}
+          allowed-account-ids: ${{ env.AWS_ACCOUNT_ID }}
+
+      - name: Login to ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@d539f0932e70871a027e9d5a9d8fc38589180a64 # v2
+
+      - name: Build and push images
+        env:
+          ECR: ${{ steps.ecr.outputs.registry }}
+          TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          build_and_push() {
+            local repo="$1" dockerfile="$2" context="$3"
+
+            if aws ecr describe-images --repository-name "$repo" \
+                 --image-ids imageTag="$TAG" >/dev/null 2>&1; then
+              echo "::notice::$repo:$TAG already exists; skipping build"
+              return 0
+            fi
+
+            docker build --provenance=false --platform linux/amd64 \
+              -f "$dockerfile" -t "$ECR/$repo:$TAG" "$context"
+            docker push "$ECR/$repo:$TAG"
+          }
+
+          build_and_push meetup-link-proxy docker/nginx/Dockerfile docker/nginx
+          build_and_push meetup-link-app docker/php/Dockerfile .
+          build_and_push meetup-link-front docker/nextjs/Dockerfile .
+
+      - name: Verify ECR vulnerability scans
+        env:
+          TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          for repo in meetup-link-proxy meetup-link-app meetup-link-front; do
+            aws ecr wait image-scan-complete \
+              --repository-name "$repo" --image-id imageTag="$TAG"
+
+            counts=$(aws ecr describe-image-scan-findings \
+              --repository-name "$repo" --image-id imageTag="$TAG" \
+              --query 'imageScanFindings.findingSeverityCounts' --output json)
+            critical=$(jq -r '.CRITICAL // 0' <<<"$counts")
+            high=$(jq -r '.HIGH // 0' <<<"$counts")
+            echo "$repo: CRITICAL=$critical HIGH=$high"
+
+            if (( critical > 0 || high > 0 )); then
+              echo "::error::$repo contains CRITICAL or HIGH vulnerabilities"
+              exit 1
+            fi
+          done
+
+      - name: Render proxy image
+        id: render-proxy
+        uses: aws-actions/amazon-ecs-render-task-definition@138c24f321fdbdf7edee4a685519d253cae2cdea # v1
+        with:
+          task-definition: ${{ env.TASK_DEF_FILE }}
+          container-name: meetup-link-proxy-container
+          image: ${{ steps.ecr.outputs.registry }}/meetup-link-proxy:${{ github.sha }}
+
+      - name: Render app image
+        id: render-app
+        uses: aws-actions/amazon-ecs-render-task-definition@138c24f321fdbdf7edee4a685519d253cae2cdea # v1
+        with:
+          task-definition: ${{ steps.render-proxy.outputs.task-definition }}
+          container-name: meetup-link-app-container
+          image: ${{ steps.ecr.outputs.registry }}/meetup-link-app:${{ github.sha }}
+
+      - name: Render front image
+        id: render-front
+        uses: aws-actions/amazon-ecs-render-task-definition@138c24f321fdbdf7edee4a685519d253cae2cdea # v1
+        with:
+          task-definition: ${{ steps.render-app.outputs.task-definition }}
+          container-name: meetup-link-front-container
+          image: ${{ steps.ecr.outputs.registry }}/meetup-link-front:${{ github.sha }}
+
+      - name: Register task definition
+        id: register
+        env:
+          RENDERED_TASK_DEFINITION: ${{ steps.render-front.outputs.task-definition }}
+        run: |
+          set -euo pipefail
+          arn=$(aws ecs register-task-definition \
+            --cli-input-json "file://$RENDERED_TASK_DEFINITION" \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "task_def_arn=$arn" >> "$GITHUB_OUTPUT"
+          echo "Registered: $arn"
+
+      - name: Run migration
+        env:
+          TASK_DEFINITION_ARN: ${{ steps.register.outputs.task_def_arn }}
+        run: |
+          set -euo pipefail
+
+          result=$(aws ecs run-task \
+            --cluster "$ECS_CLUSTER" --launch-type FARGATE \
+            --task-definition "$TASK_DEFINITION_ARN" \
+            --network-configuration "awsvpcConfiguration={subnets=[$PRIVATE_SUBNETS],securityGroups=[$ECS_SG],assignPublicIp=DISABLED}" \
+            --overrides '{"containerOverrides":[{"name":"meetup-link-app-container","command":["php","artisan","migrate","--force"]}]}' \
+            --output json)
+
+          failures=$(jq '.failures | length' <<<"$result")
+          task_arn=$(jq -r '.tasks[0].taskArn // empty' <<<"$result")
+          if (( failures > 0 )) || [[ -z "$task_arn" ]]; then
+            jq '.failures' <<<"$result"
+            echo "::error::Failed to start migration task"
+            exit 1
+          fi
+
+          echo "Migration task: $task_arn"
+          aws ecs wait tasks-stopped --cluster "$ECS_CLUSTER" --tasks "$task_arn"
+          exit_code=$(aws ecs describe-tasks \
+            --cluster "$ECS_CLUSTER" --tasks "$task_arn" \
+            --query 'tasks[0].containers[?name==`meetup-link-app-container`].exitCode | [0]' \
+            --output text)
+          echo "Migration exit code: $exit_code"
+          if [[ "$exit_code" != "0" ]]; then
+            echo "::error::Migration failed (exit=$exit_code)"
+            exit 1
+          fi
+
+      - name: Deploy service
+        env:
+          TASK_DEFINITION_ARN: ${{ steps.register.outputs.task_def_arn }}
+        run: |
+          set -euo pipefail
+          aws ecs update-service \
+            --cluster "$ECS_CLUSTER" --service "$ECS_SERVICE" \
+            --task-definition "$TASK_DEFINITION_ARN" \
+            --query 'service.[serviceName,taskDefinition]' --output text
+          aws ecs wait services-stable \
+            --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE"
+          echo "Deploy stable"
