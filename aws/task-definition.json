@@ -1,0 +1,87 @@
+{
+  "family": "meetup-link",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "arn:aws:iam::566634942304:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "meetup-link-app-container",
+      "image": "566634942304.dkr.ecr.us-east-1.amazonaws.com/meetup-link-app:20260810-96e1698",
+      "essential": true,
+      "environment": [
+        { "name": "APP_NAME", "value": "Laravel" },
+        { "name": "APP_ENV", "value": "production" },
+        { "name": "APP_DEBUG", "value": "false" },
+        { "name": "APP_URL", "value": "https://meetup-link.com" },
+        { "name": "APP_LOCALE", "value": "ja" },
+        { "name": "APP_FALLBACK_LOCALE", "value": "ja" },
+        { "name": "LOG_CHANNEL", "value": "stderr" },
+        { "name": "LOG_LEVEL", "value": "error" },
+        { "name": "DB_CONNECTION", "value": "mysql" },
+        { "name": "DB_HOST", "value": "meetup-link-db.cmz20ygoaq7u.us-east-1.rds.amazonaws.com" },
+        { "name": "DB_PORT", "value": "3306" },
+        { "name": "DB_DATABASE", "value": "basis_database" },
+        { "name": "DB_USERNAME", "value": "admin" },
+        { "name": "SESSION_DRIVER", "value": "database" },
+        { "name": "SESSION_DOMAIN", "value": ".meetup-link.com" },
+        { "name": "SESSION_SECURE_COOKIE", "value": "true" },
+        { "name": "SANCTUM_STATEFUL_DOMAINS", "value": "meetup-link.com" },
+        { "name": "CACHE_STORE", "value": "database" },
+        { "name": "QUEUE_CONNECTION", "value": "database" },
+        { "name": "FILESYSTEM_DISK", "value": "local" },
+        { "name": "MAIL_MAILER", "value": "log" }
+      ],
+      "secrets": [
+        { "name": "APP_KEY", "valueFrom": "arn:aws:secretsmanager:us-east-1:566634942304:secret:/meetup-link/prod/app-Omhhph:APP_KEY::" },
+        { "name": "DB_PASSWORD", "valueFrom": "arn:aws:secretsmanager:us-east-1:566634942304:secret:/meetup-link/prod/app-Omhhph:DB_PASSWORD::" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/meetup-link",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "app"
+        }
+      }
+    },
+    {
+      "name": "meetup-link-front-container",
+      "image": "566634942304.dkr.ecr.us-east-1.amazonaws.com/meetup-link-front:20260810-96e1698",
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/meetup-link",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "front"
+        }
+      }
+    },
+    {
+      "name": "meetup-link-proxy-container",
+      "image": "566634942304.dkr.ecr.us-east-1.amazonaws.com/meetup-link-proxy:20260810-96e1698",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 80, "protocol": "tcp" }
+      ],
+      "dependsOn": [
+        { "containerName": "meetup-link-app-container", "condition": "START" },
+        { "containerName": "meetup-link-front-container", "condition": "START" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/meetup-link",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "proxy"
+        }
+      }
+    }
+  ]
+}

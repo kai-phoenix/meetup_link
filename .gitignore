@@ -3,3 +3,9 @@
 backend/.env.production
 .env.*
 !.env.example
+# 実リソースID・インシデント調査記録（AWSアカウントID / VPC / SG / EIP 等を含むため非公開）
+/doc/脆弱性対策/
+/doc/ファイル整備/
+/alias.json
+/taskdef-current.json
+/sessionmanager-bundle/
