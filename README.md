@@ -22,6 +22,7 @@ https://meetup-link.com
 | Database | MySQL |
 | Development | Docker / Docker Compose |
 | AWS | Route 53 / ACM / ALB / ECS Fargate / ECR / RDS / Secrets Manager / CloudWatch Logs |
+| CI/CD | GitHub Actions / GitHub OIDC |
 
 ## Architecture
 
@@ -45,8 +46,12 @@ ALBがHTTPリクエストをHTTPSへリダイレクトし、ECS上のnginxが画
 現在のAWS環境では、以下を設定しています。
 
 - ECRのpush時イメージスキャン
+- CRITICALまたはHIGHの脆弱性を検出したイメージのデプロイ停止
 - ECRタグの上書き禁止（immutable image tags）
 - ECSタスク定義で固定イメージタグを使用
+- GitHub OIDCによる一時認証（AWSアクセスキーをGitHubに保存しない）
+- OIDCの信頼対象を本リポジトリの`main`ブランチに限定
+- ECS deployment circuit breakerによる失敗時の自動ロールバック
 - アプリケーションキーとDBパスワードをSecrets ManagerからECSへ注入
 - ALBでHTTPSを終端し、HTTPアクセスをHTTPSへリダイレクト
 - RDSを外部非公開に設定
@@ -56,6 +61,28 @@ ALBがHTTPリクエストをHTTPSへリダイレクトし、ECS上のnginxが画
 - ECSコンテナログをCloudWatch Logsへ記録
 
 記載内容は、リポジトリの設定と稼働中のAWS環境で確認できたものに限定しています。
+
+## CI/CD
+
+`main`ブランチへのpushを起点に、GitHub Actionsが次の順序で本番へデプロイします。
+
+```text
+Frontend / Backend tests
+        ↓
+GitHub OIDCでAWSの一時認証情報を取得
+        ↓
+proxy / app / frontをコミットSHAタグでECRへpush
+        ↓
+ECRスキャン完了待ち（最大15分）
+        ↓
+CRITICAL / HIGHが0件の場合のみmigrationを実行
+        ↓
+ECSサービスを新しいタスク定義へ更新
+```
+
+テスト、イメージbuild、スキャン、migrationのいずれかが失敗した場合は、ECSサービスを更新しません。サービス更新後に新タスクが安定しない場合は、deployment circuit breakerが直前のタスク定義へ自動的にロールバックします。
+
+実行結果はGitHubリポジトリの`Actions` → `DEPLOY_TO_ECS`、稼働中のタスク定義とロールアウト状態はAWS Management ConsoleのECSサービス画面で確認できます。
 
 ## Local Development
 
@@ -103,5 +130,6 @@ Laravelを中心とした業務経験から技術領域を広げるため、Next
 ## 制約/未来の改善事項
 
 - アップロード画像をECSタスク内のローカルストレージからS3へ移行
-- GitHub ActionsとOIDCを利用したECSデプロイの自動化
-- CIにフロントエンドのproduction buildとDockerイメージのビルド検証を追加
+- RDSマスターユーザーから、アプリ実行用・migration用の最小権限DBユーザーへ分離
+- RDSを暗号化ストレージへ移行
+- Pull RequestのCIにフロントエンドのproduction buildとDockerイメージのビルド検証を追加

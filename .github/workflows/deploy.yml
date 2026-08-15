@@ -30,7 +30,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
 
@@ -76,12 +76,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        uses: aws-actions/configure-aws-credentials@cabfdba3510de1431bac9dba27511d97497fc100 # v5
         with:
           role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
           role-session-name: GitHubActions-${{ github.run_id }}
@@ -124,15 +124,49 @@ jobs:
         run: |
           set -euo pipefail
 
-          for repo in meetup-link-proxy meetup-link-app meetup-link-front; do
-            aws ecr wait image-scan-complete \
-              --repository-name "$repo" --image-id imageTag="$TAG"
+          wait_for_scan() {
+            local repo="$1"
+            local deadline=$((SECONDS + 900))
+            local retry_interval=10
+            local result status
 
-            counts=$(aws ecr describe-image-scan-findings \
-              --repository-name "$repo" --image-id imageTag="$TAG" \
-              --query 'imageScanFindings.findingSeverityCounts' --output json)
-            critical=$(jq -r '.CRITICAL // 0' <<<"$counts")
-            high=$(jq -r '.HIGH // 0' <<<"$counts")
+            while (( SECONDS < deadline )); do
+              if result=$(aws ecr describe-image-scan-findings \
+                --repository-name "$repo" --image-id imageTag="$TAG" \
+                --output json 2>&1); then
+                status=$(jq -r '.imageScanStatus.status // "UNKNOWN"' <<<"$result")
+
+                case "$status" in
+                  COMPLETE)
+                    scan_result="$result"
+                    return 0
+                    ;;
+                  FAILED|UNSUPPORTED_IMAGE|SCAN_ELIGIBILITY_EXPIRED|FINDINGS_UNAVAILABLE|LIMIT_EXCEEDED)
+                    echo "::error::$repo image scan ended with status=$status"
+                    return 1
+                    ;;
+                esac
+              elif [[ "$result" == *"ScanNotFoundException"* ]]; then
+                status="NOT_FOUND"
+              else
+                echo "::error::$repo image scan lookup failed: $result"
+                return 1
+              fi
+
+              echo "::notice::$repo image scan status=$status; retrying in ${retry_interval}s"
+              sleep "$retry_interval"
+            done
+
+            echo "::error::$repo image scan did not complete within 15 minutes"
+            return 1
+          }
+
+          for repo in meetup-link-proxy meetup-link-app meetup-link-front; do
+            scan_result=""
+            wait_for_scan "$repo"
+
+            critical=$(jq -r '.imageScanFindings.findingSeverityCounts.CRITICAL // 0' <<<"$scan_result")
+            high=$(jq -r '.imageScanFindings.findingSeverityCounts.HIGH // 0' <<<"$scan_result")
             echo "$repo: CRITICAL=$critical HIGH=$high"
 
             if (( critical > 0 || high > 0 )); then
