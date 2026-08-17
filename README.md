@@ -29,14 +29,14 @@ https://meetup-link.com
 ```text
 Route 53 / ACM
        ↓
-Application Load Balancer
+Application Load Balancer (public subnet)
        ↓
-ECS Fargate
+ECS Fargate (private subnet / 0.5 vCPU / 1 GB)
 ├── nginx
 ├── Next.js
 └── Laravel (PHP-FPM)
-       ↓
-RDS for MySQL
+       ├── RDS for MySQL (private subnet)
+       └── NAT Gateway → AWS API / Internet (outbound TCP 443)
 ```
 
 ALBがHTTPリクエストをHTTPSへリダイレクトし、ECS上のnginxが画面リクエストをNext.jsへ、`/api`と`/storage`へのリクエストをLaravelへ振り分けます。認証APIにはLaravel SanctumのAPIトークンを使用しています。
@@ -54,6 +54,8 @@ ALBがHTTPリクエストをHTTPSへリダイレクトし、ECS上のnginxが画
 - ECS deployment circuit breakerによる失敗時の自動ロールバック
 - アプリケーションキーとDBパスワードをSecrets ManagerからECSへ注入
 - ALBでHTTPSを終端し、HTTPアクセスをHTTPSへリダイレクト
+- ECSタスクをプライベートサブネットに配置し、Public IPを無効化
+- ECSの外向き通信をTCP 443、RDS向け通信をTCP 3306に制限
 - RDSを外部非公開に設定
 - RDSの自動バックアップを7日間保持
 - RDSの削除保護
