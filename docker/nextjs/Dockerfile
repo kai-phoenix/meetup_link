@@ -5,7 +5,7 @@
 #   ECRスキャンで検出される脆弱性が少ない
 # - sharp は package-lock.json に @img/sharp-linuxmusl-x64 が
 #   含まれているため、musl環境でも事前ビルド済みバイナリで動く
-FROM node:24.19.0-alpine3.24
+FROM node:24.22.1-alpine3.24
 
 # 作業ディレクトリを/appに設定
 WORKDIR /app/
