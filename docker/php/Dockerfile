@@ -1,10 +1,10 @@
-# PHP 8.4系のalpineイメージを使用
+# PHP 8.4.27のAlpineイメージを使用
 #
-# Debian版（php:8.4-fpm）はECR BASIC scanで CRITICAL 5 / HIGH 40 が出る。
+# Debian版のPHP-FPMイメージは過去のECR BASIC scanで CRITICAL 5 / HIGH 40 が出た。
 # 内訳は glibc / perl / linux(ヘッダ) といったbase image同梱のOSパッケージで、
 # アプリからは到達しないものが大半だが、再公開の判定基準（critical=0）を満たせない。
-# alpine版は同梱パッケージが少なく検出数を大幅に減らせる。
-FROM php:8.4-fpm-alpine
+# Alpine版は同梱パッケージが少なく検出数を大幅に減らせる。
+FROM php:8.4.27-fpm-alpine
 
 # 作業ディレクトリを指定
 WORKDIR /var/www/html
